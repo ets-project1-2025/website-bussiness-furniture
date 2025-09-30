@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import MetaHead from "components/MetaHead";
-import PageLayout from "components/PageLayout/PageLayout";
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -38,7 +37,6 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <PageLayout>
       <MetaHead title="Kontak Kami - Furniture Business" description="Hubungi kami untuk informasi lebih lanjut tentang produk furnitur kami." />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Kontak Kami</h1>
@@ -192,7 +190,6 @@ const Contact: React.FC = () => {
           </div>
         </div>
       </div>
-    </PageLayout>
   );
 };
 

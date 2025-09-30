@@ -2,7 +2,6 @@ import { GetStaticProps } from "next";
 import Link from "next/link";
 import client from "lib/sanity/client";
 import MetaHead from "components/MetaHead";
-import PageLayout from "components/PageLayout/PageLayout";
 
 interface AboutProps {
   // Add any props you might need for the about page
@@ -10,7 +9,6 @@ interface AboutProps {
 
 const About: React.FC<AboutProps> = () => {
   return (
-    <PageLayout>
       <MetaHead title="Tentang Kami - Furniture Business" description="Pelajari lebih lanjut tentang bisnis furniture kami, nilai-nilai, dan komitmen kami terhadap kualitas." />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Tentang Kami</h1>
@@ -58,7 +56,6 @@ const About: React.FC<AboutProps> = () => {
           </p>
         </div>
       </div>
-    </PageLayout>
   );
 };
 

@@ -5,7 +5,6 @@ import categoriesQuery from "lib/sanity/queries/categories";
 import featuredProductsQuery from "lib/sanity/queries/featured_products";
 import { CategorySchema, ProductSchema } from "lib/interfaces/schema";
 import MetaHead from "components/MetaHead";
-import PageLayout from "components/PageLayout/PageLayout";
 import CategoryList from "components/CategoryList/CategoryList";
 import ProductList from "components/ProductList/ProductList";
 
@@ -16,7 +15,6 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ categories, products }) => {
   return (
-    <PageLayout>
       <MetaHead 
         title="Furniture Business - Produk Furnitur Berkualitas Tinggi" 
         description="Temukan berbagai produk furnitur berkualitas tinggi dengan desain yang indah dan fungsional untuk rumah dan kantor Anda." 
@@ -113,7 +111,6 @@ const Home: React.FC<HomeProps> = ({ categories, products }) => {
           </Link>
         </div>
       </section>
-    </PageLayout>
   );
 };
 

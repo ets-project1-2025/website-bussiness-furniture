@@ -22,7 +22,9 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <>
+      <Cart />
+      <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="w-full mx-auto max-w-7xl px-4">
           <div className="flex justify-between items-center py-4">
             {/* Logo */}
@@ -93,6 +95,7 @@ const Header = () => {
           )}
         </div>
       </header>
+    </>
   );
 };
 

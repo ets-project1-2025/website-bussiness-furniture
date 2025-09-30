@@ -4,7 +4,6 @@ import productsQuery from "lib/sanity/queries/products";
 import categoriesQuery from "lib/sanity/queries/categories";
 import { ProductSchema, CategorySchema } from "lib/interfaces/schema";
 import MetaHead from "components/MetaHead";
-import PageLayout from "components/PageLayout/PageLayout";
 import ProductList from "components/ProductList/ProductList";
 
 interface ProductsPageProps {
@@ -14,7 +13,6 @@ interface ProductsPageProps {
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ products, categories }) => {
   return (
-    <PageLayout>
       <MetaHead title="Katalog Produk - Furniture Business" description="Temukan berbagai produk furnitur kami yang berkualitas tinggi dan desain yang indah." />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Katalog Produk</h1>
@@ -103,7 +101,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ products, categories }) => 
           </button>
         </div>
       </div>
-    </PageLayout>
   );
 };
 
