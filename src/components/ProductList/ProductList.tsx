@@ -1,5 +1,5 @@
-import { ProductSchema } from "lib/interfaces";
-import ProductItem from "./ProductItem";
+import { ProductSchema } from "lib/interfaces/schema";
+import ProductCard from "components/ProductCard";
 
 interface ProductListProps {
   products: ProductSchema[];
@@ -7,9 +7,9 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   return (
-    <div className="grid gap-x-1 md:gap-y-14 gap-y-10 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map((product) => (
-        <ProductItem product={product} key={product._id} />
+        <ProductCard product={product} key={product._id} />
       ))}
     </div>
   );

@@ -6,7 +6,9 @@ export interface ProductSchema {
   slug: string;
   description: [PortableTextBlock];
   featured_image: Image;
+  images?: Image[]; // Additional images for gallery
   price: number;
+  currency: string;
   on_sale: boolean;
   sale_price: number;
   sku: string;
@@ -16,6 +18,8 @@ export interface ProductSchema {
       slug: string;
     }
   ];
+  category?: CategorySchema; // Reference to category schema
+  featured?: boolean; // For featured products
 }
 
 export interface CategorySchema {
