@@ -16,6 +16,6 @@
     "baseUrl": "./src",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "sanity"]
+  "include": ["next-env.d.ts", "src/**/*"],
+  "exclude": ["node_modules", "sanity", "qwen-code"]
 }

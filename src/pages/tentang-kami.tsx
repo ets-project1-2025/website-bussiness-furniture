@@ -1,4 +1,5 @@
 import { GetStaticProps } from "next";
+import Link from "next/link";
 import client from "lib/sanity/client";
 import MetaHead from "components/MetaHead";
 import PageLayout from "components/PageLayout/PageLayout";

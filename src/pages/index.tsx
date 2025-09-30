@@ -1,4 +1,5 @@
 import { GetStaticProps } from "next";
+import Link from "next/link";
 import client from "lib/sanity/client";
 import categoriesQuery from "lib/sanity/queries/categories";
 import featuredProductsQuery from "lib/sanity/queries/featured_products";
@@ -32,18 +33,16 @@ const Home: React.FC<HomeProps> = ({ categories, products }) => {
               Temukan koleksi furnitur eksklusif kami yang dirancang untuk memberikan kenyamanan, fungsionalitas, dan keindahan pada setiap ruang.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a 
-                href="/produk" 
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300"
-              >
-                Jelajahi Produk
-              </a>
-              <a 
-                href="/tentang-kami" 
-                className="bg-white hover:bg-gray-100 text-blue-600 border border-blue-600 font-medium py-3 px-6 rounded-lg transition duration-300"
-              >
-                Pelajari Lebih Lanjut
-              </a>
+              <Link href="/produk">
+                <a className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
+                  Jelajahi Produk
+                </a>
+              </Link>
+              <Link href="/tentang-kami">
+                <a className="bg-white hover:bg-gray-100 text-blue-600 border border-blue-600 font-medium py-3 px-6 rounded-lg transition duration-300">
+                  Pelajari Lebih Lanjut
+                </a>
+              </Link>
             </div>
           </div>
           <div className="md:w-1/2 flex justify-center">
@@ -65,9 +64,11 @@ const Home: React.FC<HomeProps> = ({ categories, products }) => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-gray-800">Produk Unggulan</h2>
-            <a href="/produk" className="text-blue-600 hover:underline font-medium">
-              Lihat Semua Produk
-            </a>
+            <Link href="/produk">
+              <a className="text-blue-600 hover:underline font-medium">
+                Lihat Semua Produk
+              </a>
+            </Link>
           </div>
           {products && <ProductList products={products} />}
         </div>
@@ -89,7 +90,7 @@ const Home: React.FC<HomeProps> = ({ categories, products }) => {
                   ))}
                 </div>
                 <p className="text-gray-600 mb-4">
-                  "Furniture yang saya beli sangat berkualitas dan sesuai dengan deskripsi. Pelayanan pelanggan juga sangat ramah dan membantu."
+                  {`"Furniture yang saya beli sangat berkualitas dan sesuai dengan deskripsi. Pelayanan pelanggan juga sangat ramah dan membantu."`}
                 </p>
                 <p className="font-medium text-gray-800">- Pelanggan {item}</p>
               </div>
@@ -105,12 +106,11 @@ const Home: React.FC<HomeProps> = ({ categories, products }) => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Dapatkan inspirasi dan temukan berbagai pilihan furnitur yang sempurna untuk rumah atau kantor Anda.
           </p>
-          <a 
-            href="/kontak" 
-            className="inline-block bg-white text-blue-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition duration-300"
-          >
-            Hubungi Kami Sekarang
-          </a>
+          <Link href="/kontak">
+            <a className="inline-block bg-white text-blue-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition duration-300">
+              Hubungi Kami Sekarang
+            </a>
+          </Link>
         </div>
       </section>
     </PageLayout>

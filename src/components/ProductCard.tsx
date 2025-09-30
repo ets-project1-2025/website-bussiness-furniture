@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ProductSchema } from "lib/interfaces/schema";
+import urlFor from "lib/sanity/urlFor";
 
 interface ProductCardProps {
   product: ProductSchema;
@@ -10,9 +11,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
       <div className="relative h-60 w-full">
-        {product.image ? (
+        {product.featured_image ? (
           <Image 
-            src={product.image} 
+            src={urlFor(product.featured_image).url()} 
             alt={product.name} 
             layout="fill"
             objectFit="cover"
@@ -26,7 +27,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-800 mb-1">{product.name}</h3>
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+          {Array.isArray(product.description) 
+            ? product.description.map(block => block.children?.map(child => child.text).join(' ')).join(' ')
+            : product.description}
+        </p>
         <div className="flex justify-between items-center">
           <span className="text-lg font-bold text-blue-600">
             {product.price && product.currency 

@@ -39,6 +39,20 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
+  
+  // If product is not available, show a message
+  if (!product) {
+    return (
+      <PageLayout>
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-bold text-gray-800">Produk Tidak Ditemukan</h2>
+            <p className="text-gray-600 mt-2">Maaf, produk yang Anda cari tidak tersedia.</p>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>
@@ -55,7 +69,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
         {product?.name && (
           <MetaHead
             title={`${product.name} - FurnitureKami`}
-            description={toPlainText(product.description)}
+            description={product.description && Array.isArray(product.description) ? toPlainText(product.description) : ''}
           />
         )}
         
@@ -63,7 +77,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           {/* Product Gallery Section */}
           <div>
             <div className="grid grid-cols-2 gap-4 mb-4">
-              {product.images && product.images.length > 0 ? (
+              {product?.images && product.images.length > 0 ? (
                 product.images.map((img, index) => (
                   <div 
                     key={index} 
@@ -125,7 +139,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-600">Kategori</p>
-                  <p className="font-medium">{product.category?.name || 'Umum'}</p>
+                  <p className="font-medium">{product.category?.title || 'Umum'}</p>
                 </div>
                 <div>
                   <p className="text-gray-600">Material</p>
@@ -235,8 +249,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     slug: params?.slug
   });
 
+  // Return a fallback page if product is not found
   if (!product) {
-    throw Error("Sorry, something went wrong.");
+    return {
+      props: { 
+        product: null 
+      },
+      revalidate: 100
+    };
   }
 
   return {

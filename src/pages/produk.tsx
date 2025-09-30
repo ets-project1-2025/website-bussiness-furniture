@@ -27,7 +27,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ products, categories }) => 
                 <option value="">Semua Kategori</option>
                 {categories.map((category) => (
                   <option key={category._id} value={category._id}>
-                    {category.name}
+                    {category.title}
                   </option>
                 ))}
               </select>

@@ -20,6 +20,7 @@ export interface ProductSchema {
   ];
   category?: CategorySchema; // Reference to category schema
   featured?: boolean; // For featured products
+  image?: string; // For backward compatibility if needed
 }
 
 export interface CategorySchema {

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 // Define pages for sitemap
-const pages = [
+const pages: { route: string; lastmod: string }[] = [
   { route: "/", lastmod: new Date().toISOString().split("T")[0] },
   { route: "/produk", lastmod: new Date().toISOString().split("T")[0] },
   { route: "/tentang-kami", lastmod: new Date().toISOString().split("T")[0] },
@@ -17,7 +17,7 @@ export default function Sitemap() {
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   // In a real implementation, you would fetch your dynamic routes from your CMS
   // For now, we'll create a static sitemap
-  const dynamicPages = []; // In a full implementation, you would fetch products and categories
+  const dynamicPages: { route: string; lastmod: string }[] = []; // In a full implementation, you would fetch products and categories
 
   const allPages = [...pages, ...dynamicPages];
   

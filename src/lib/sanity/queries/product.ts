@@ -7,14 +7,21 @@ const productQuery = groq`
     "slug": slug.current,
     description,
     featured_image,
+    images,
     price,
+    currency,
     on_sale,
     sale_price,
     "categories": categories[]->{
       title,
       'slug': slug.current
     },
-    sku
+    "category": categories[0]->{
+      title,
+      'slug': slug.current
+    },
+    sku,
+    featured
   }
 `;
 
