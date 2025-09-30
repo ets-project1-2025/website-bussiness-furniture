@@ -37,6 +37,7 @@ const Contact: React.FC = () => {
   };
 
   return (
+    <>
       <MetaHead title="Kontak Kami - Furniture Business" description="Hubungi kami untuk informasi lebih lanjut tentang produk furnitur kami." />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Kontak Kami</h1>
@@ -190,6 +191,7 @@ const Contact: React.FC = () => {
           </div>
         </div>
       </div>
+    </>
   );
 };
 

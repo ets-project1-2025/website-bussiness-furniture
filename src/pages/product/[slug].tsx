@@ -42,17 +42,28 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   // If product is not available, show a message
   if (!product) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-800">Produk Tidak Ditemukan</h2>
-          <p className="text-gray-600 mt-2">Maaf, produk yang Anda cari tidak tersedia.</p>
+      <>
+        <MetaHead 
+          title="Produk Tidak Ditemukan - FurnitureKami" 
+          description="Produk yang Anda cari tidak ditemukan di toko kami."
+        />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-bold text-gray-800">Produk Tidak Ditemukan</h2>
+            <p className="text-gray-600 mt-2">Maaf, produk yang Anda cari tidak tersedia.</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
+      <MetaHead
+        title={`${product.name} - FurnitureKami`}
+        description={product.description && Array.isArray(product.description) ? toPlainText(product.description) : ''}
+      />
+      <div className="container mx-auto px-4 py-8">
         <Link href="/produk">
           <a className="text-blue-600 hover:underline flex items-center mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -236,6 +247,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           </div>
         </div>
       </div>
+    </>
   );
 };
 

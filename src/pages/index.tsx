@@ -15,6 +15,7 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ categories, products }) => {
   return (
+    <>
       <MetaHead 
         title="Furniture Business - Produk Furnitur Berkualitas Tinggi" 
         description="Temukan berbagai produk furnitur berkualitas tinggi dengan desain yang indah dan fungsional untuk rumah dan kantor Anda." 
@@ -111,6 +112,7 @@ const Home: React.FC<HomeProps> = ({ categories, products }) => {
           </Link>
         </div>
       </section>
+    </>
   );
 };
 
