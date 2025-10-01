@@ -1,0 +1,109 @@
+---
+// src/layouts/AdminLayout.astro
+import { getCurrentUser } from '../lib/auth';
+
+let user = null;
+
+try {
+  user = await getCurrentUser();
+} catch (error) {
+  console.error('Error checking authentication:', error);
+}
+
+if (!user) {
+  return Astro.redirect('/admin/login');
+}
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title ? `${title} - Admin` : 'Dasbor Admin - WIDI Furniture'}</title>
+    <meta name="description" content="Dasbor administrasi WIDI Furniture - Kelola produk, pesanan, dan pengguna">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="min-h-screen bg-[var(--furniture-cream)]">
+      <header class="bg-[var(--furniture-brown)] text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+          <h1 class="text-xl font-bold">Dasbor Admin - WIDI Furniture</h1>
+          <div class="flex items-center space-x-4">
+            <span>Halo, {user.email}</span>
+            <a href="/admin/logout" class="btn-secondary text-sm">Logout</a>
+          </div>
+        </div>
+      </header>
+
+      <nav class="bg-[var(--furniture-light-brown)] p-4">
+        <div class="container mx-auto">
+          <ul class="flex flex-wrap space-x-4 md:space-x-6">
+            <li><a href="/admin/" class="text-[var(--furniture-brown)] hover:underline">Beranda</a></li>
+            <li><a href="/admin/products" class="text-[var(--furniture-brown)] hover:underline">Produk</a></li>
+            <li><a href="/admin/categories" class="text-[var(--furniture-brown)] hover:underline">Kategori</a></li>
+            <li><a href="/admin/orders" class="text-[var(--furniture-brown)] hover:underline">Pesanan</a></li>
+            <li><a href="/admin/users" class="text-[var(--furniture-brown)] hover:underline">Pengguna</a></li>
+            <li><a href="/admin/lookbook" class="text-[var(--furniture-brown)] hover:underline">Lookbook</a></li>
+            <li><a href="/admin/recommendations" class="text-[var(--furniture-brown)] hover:underline">Rekomendasi</a></li>
+            <li><a href="/admin/analytics" class="text-[var(--furniture-brown)] hover:underline">Analitik</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="container mx-auto py-8 px-4">
+        <slot />
+      </main>
+
+      <footer class="bg-[var(--furniture-light-brown)] py-6 mt-12">
+        <div class="container mx-auto text-center text-[var(--furniture-brown)]">
+          <p>© {new Date().getFullYear()} WIDI Furniture - Dasbor Admin</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  /* Gaya tambahan untuk admin layout */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  .btn-secondary {
+    background-color: #d1d5db;
+    color: #374151;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #e5e7eb;
+  }
+  
+  /* Gaya untuk tabel admin */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  th {
+    background-color: #f9fafb;
+    color: #374151;
+    font-weight: 600;
+  }
+</style>

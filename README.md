@@ -1,34 +1,84 @@
-## 🛍 Next.js Sanity E-commerce Starter Kit
+# WIDI Furniture - E-commerce Furniture Modern
 
-A [Next.js](https://nextjs.org/) E-commerce app with [Sanity.io](https://www.sanity.io/) and [Stripe API](https://stripe.com/). Built with [TailwindCSS](https://tailwindcss.com/) framework & [SASS](https://sass-lang.com/) CSS extension.
+Website e-commerce furnitur yang tidak hanya fungsional dan profesional, tetapi juga memberikan pengalaman belanja yang unik, interaktif, dan personal melalui fitur-fitur inovatif.
 
-Demo live at: [nextjs-sanity-ecommerce-loq24.vercel.app](https://nextjs-sanity-ecommerce-loq24.vercel.app/)
+## ✨ Fitur Unggulan
 
-> You may use `4242 4242 4242 4242` as card number when paying and future `MM/YY` value and arbitrary `CVC` value
+- "Shop the Look" Interaktif
+- Asisten Desainer Berbasis AI
+- Bukti Sosial & Urgensi Real-time
+- Program Loyalitas Berbasis Gamifikasi
+- Progressive Web App (PWA)
+- Dukungan Multi-bahasa (Indonesia & Inggris)
 
-## Run the app locally
+## 🛠️ Teknologi yang Digunakan
 
-> To run this app locally, you need to have [Sanity.io](https://www.sanity.io/) and [Stripe](https://stripe.com/) accounts.
+- **Framework Frontend:** Astro
+- **Backend & Database:** Supabase
+- **Styling:** Tailwind CSS
+- **Hosting/Deployment:** Vercel
+- **Version Control:** GitHub
 
-### Setting up Sanity
+## 🧰 Setup Project
 
-- If using GitHub Codespaces: Follow the configuration guide at [sanity/CONFIGURATION_GUIDE.md](./sanity/CONFIGURATION_GUIDE.md)
-- Otherwise, head over to the [Sanity.io's](https://www.sanity.io/docs/create-a-sanity-project?ref=navbar) getting started page and generate a blank template
-- Copy the schema files located in `sanity/schemas` from this project to your sanity project's `schemas` directory
-- Make sure to replace the client configuration found under `src/lib/sanity.js` with your own Sanity project details
+1. Copy file `.env.example` ke `.env` dan isi dengan nilai yang sesuai:
+   ```
+   PUBLIC_SUPABASE_URL=your_supabase_project_url
+   PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+2. Install dependencies: `npm install`
+3. Jalankan development server: `npm run dev`
 
-### Setting up Stripe
+## 📁 Struktur Project
 
-- Create a [Stripe](https://stripe.com/) account
-- Make sure to enable Test mode first
-- Submit basic account details to enable test mode payment
+Struktur project utama:
 
-### Environment Variables
+```
+/
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── components/
+│   │   ├── Header.astro
+│   │   └── Footer.astro
+│   ├── layouts/
+│   │   └── Layout.astro
+│   ├── lib/
+│   │   ├── supabase.js
+│   │   └── types.ts
+│   ├── pages/
+│   │   └── index.astro
+│   └── styles/
+│       └── global.css
+├── astro.config.mjs
+├── README.md
+└── package.json
+```
 
-> It is important to provide the following environment variables in order for this project to run properly locally
+## 🚀 Pengembangan
 
-`SANITY_PROJECT_TOKEN` - Found under [https://www.sanity.io/manage](https://www.sanity.io/manage) then select your project and then go to API -> Tokens
+- Astro mencari file `.astro` atau `.md` di direktori `src/pages/` sebagai rute berdasarkan nama filenya
+- Saat menjalankan `npm run dev`, Astro akan memulai server development lokal di `http://localhost:4321`
+- Astro akan otomatis me-reload browser saat terjadi perubahan konten
 
-`NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - This can be found in your Stripe's dashboard
+## 📈 Roadmap Pengembangan
 
-`STRIPE_SECRET_KEY` - This can be found in your Stripe's dashboard
+### 🚀 Fase 1: Fondasi, MVP, & Dasbor Admin
+- [ ] Setup & Infrastruktur: Inisialisasi proyek Supabase, buat skema database
+- [ ] Dasbor Admin: Implementasikan login/logout dan modul CRUD untuk Produk dan Kategori
+- [ ] Website Publik (MVP): Bangun halaman utama, katalog, dan detail produk
+
+### ✨ Fase 2: Peningkatan Pengalaman & Keterlibatan
+- [ ] Fitur "Shop the Look": Modul CRUD untuk lookbook dengan hotspot interaktif
+- [ ] Akun Pelanggan: Sistem pendaftaran/login dan wishlist
+- [ ] Konfigurasi Aplikasi Modern: Implementasi PWA dan multi-bahasa
+
+### 💡 Fase 3: Fitur Komunitas & Konversi
+- [ ] Program Loyalitas & Gamifikasi: Implementasi poin loyalitas
+- [ ] Bukti Sosial & Ulasan: Fitur realtime dan review pelanggan
+- [ ] Asisten Desainer AI: Integrasi dengan API LLM
+
+### 🏆 Fase 4: E-commerce Penuh & Optimalisasi
+- [ ] Implementasi Keranjang Belanja & Checkout
+- [ ] Manajemen Pesanan di Dasbor Admin
+- [ ] Analitik & SEO Lanjutan

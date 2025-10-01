@@ -1,0 +1,126 @@
+---
+// src/pages/admin/lookbook/[id]/index.astro
+import { getLookbookGalleryById, getHotspotsByGalleryId, deleteLookbookHotspot } from '../../../lib/admin-api';
+import Layout from '../../../layouts/Layout.astro';
+
+// Dapatkan ID dari URL
+const id = Astro.params.id;
+
+// Periksa otentikasi admin
+const { data: { user } } = await supabase.auth.getUser();
+if (!user) {
+  return Response.redirect(new URL('/admin/login', request.url));
+}
+
+// Cek apakah user memiliki role admin
+const { data: profileData } = await supabase
+  .from('profiles')
+  .select('id')
+  .eq('id', user.id)
+  .single();
+
+if (!profileData) {
+  return Response.redirect(new URL('/akun/login', request.url));
+}
+
+// Ambil data galeri dan hotspot
+let gallery = null;
+let hotspots = [];
+try {
+  gallery = await getLookbookGalleryById(id);
+  hotspots = await getHotspotsByGalleryId(id);
+} catch (error) {
+  console.error('Error fetching lookbook gallery or hotspots:', error);
+}
+---
+
+<Layout>
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-900">Detail Gallery: {gallery?.title}</h1>
+      <a href={`/admin/lookbook/edit/${id}`} class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">Edit Gallery</a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        {gallery?.cover_image_url ? (
+          <img 
+            src={gallery.cover_image_url} 
+            alt={gallery.title} 
+            class="w-full h-auto rounded-lg shadow-md"
+          />
+        ) : (
+          <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-64 flex items-center justify-center text-gray-500">
+            Tidak ada gambar cover
+          </div>
+        )}
+      </div>
+      
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Deskripsi</h2>
+        <p class="text-gray-600">{gallery?.description || 'Tidak ada deskripsi'}</p>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-900">Hotspot Produk</h2>
+        <a href={`/admin/lookbook/${id}/hotspots/new`} class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">Tambah Hotspot</a>
+      </div>
+
+      <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Koordinat</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {hotspots.map((hotspot) => (
+              <tr key={hotspot.id}>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{hotspot.product?.name}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-500">Rp{Number(hotspot.product?.price).toLocaleString('id-ID')}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {JSON.stringify(hotspot.coordinates)}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href={`/admin/lookbook/${id}/hotspots/edit/${hotspot.id}`} class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
+                  <button 
+                    onClick={() => deleteHotspot(hotspot.id)}
+                    class="text-red-600 hover:text-red-900"
+                  >
+                    Hapus
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function deleteHotspot(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus hotspot ini?')) {
+        try {
+          await fetch(`/api/admin/lookbook-hotspot/${id}`, {
+            method: 'DELETE'
+          });
+          // Refresh halaman setelah penghapusan
+          window.location.reload();
+        } catch (error) {
+          console.error('Error deleting hotspot:', error);
+          alert('Gagal menghapus hotspot');
+        }
+      }
+    }
+  </script>
+</Layout>

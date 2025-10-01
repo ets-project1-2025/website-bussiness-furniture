@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="id">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="generator" content={Astro.generator} />
+		<title>WIDI Furniture - Furniture Modern yang Mewah dan Alami</title>
+		<meta name="description" content="Temukan koleksi furniture eksklusif kami yang menggabungkan desain modern dengan kehangatan alami kayu. Dapatkan pengalaman desain interior yang unik dan personal.">
+		<meta name="theme-color" content="#8B4513" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div id="root">
+			<slot />
+		</div>
+		
+		<!-- Tombol Install PWA -->
+		<div id="installPrompt" class="install-prompt hidden">
+			<div class="install-content">
+				<h3>Install Aplikasi WIDI Furniture</h3>
+				<p>Install aplikasi kami untuk pengalaman belanja yang lebih baik.</p>
+				<button id="installButton" class="btn-primary">Install</button>
+				<button id="closeInstall" class="btn-secondary">Tutup</button>
+			</div>
+		</div>
+	</body>
+</html>
+
+<style global>
+	@import "../styles/global.css";
+	
+	/* Gaya tambahan untuk struktur halaman */
+	#root {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+	
+	/* Gaya untuk prompt install PWA */
+	.install-prompt {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: var(--furniture-cream);
+		padding: 1rem;
+		box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+		z-index: 1000;
+		animation: slideUp 0.3s ease;
+	}
+	
+	.install-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	
+	.install-content h3 {
+		margin: 0;
+		font-size: 1.1rem;
+		color: var(--furniture-brown);
+	}
+	
+	.install-content p {
+		margin: 0;
+		font-size: 0.9rem;
+		color: var(--furniture-dark-brown);
+		text-align: center;
+	}
+	
+	.install-buttons {
+		display: flex;
+		gap: 0.5rem;
+		width: 100%;
+		justify-content: center;
+		margin-top: 0.5rem;
+	}
+	
+	#installButton, #closeInstall {
+		flex: 1;
+		max-width: 150px;
+		text-align: center;
+	}
+	
+	.hidden {
+		display: none;
+	}
+	
+	@keyframes slideUp {
+		from {
+			transform: translateY(100%);
+		}
+		to {
+			transform: translateY(0);
+		}
+	}
+</style>
+
+<script>
+	// Script untuk install PWA
+	let deferredPrompt;
+	
+	window.addEventListener('beforeinstallprompt', (e) => {
+		// Mencegah prompt install otomatis
+		e.preventDefault();
+		
+		// Simpan event untuk digunakan nanti
+		deferredPrompt = e;
+		
+		// Tampilkan prompt install
+		showInstallPrompt();
+	});
+	
+	function showInstallPrompt() {
+		const installPrompt = document.getElementById('installPrompt');
+		installPrompt.classList.remove('hidden');
+	}
+	
+	function hideInstallPrompt() {
+		const installPrompt = document.getElementById('installPrompt');
+		installPrompt.classList.add('hidden');
+	}
+	
+	// Install aplikasi saat tombol ditekan
+	document.getElementById('installButton').addEventListener('click', async () => {
+		if (deferredPrompt) {
+			// Menampilkan prompt install
+			deferredPrompt.prompt();
+			
+			// Menunggu hasil dari prompt
+			const { outcome } = await deferredPrompt.userChoice;
+			
+			// Reset prompt
+			deferredPrompt = null;
+			
+			// Sembunyikan prompt
+			hideInstallPrompt();
+		}
+	});
+	
+	// Sembunyikan prompt saat tombol tutup ditekan
+	document.getElementById('closeInstall').addEventListener('click', hideInstallPrompt);
+	
+	// Register service worker
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('/sw.js')
+			.then(registration => {
+				console.log('ServiceWorker registration successful with scope: ', registration.scope);
+			})
+			.catch(error => {
+				console.log('ServiceWorker registration failed: ', error);
+			});
+	}
+</script>

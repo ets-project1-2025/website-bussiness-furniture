@@ -1,0 +1,136 @@
+---
+// src/pages/admin/orders.astro
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getCurrentUser } from '../../lib/auth';
+import { getAllOrders } from '../../lib/admin-api';
+
+// Periksa otentikasi admin
+const { data: { user } } = await supabase.auth.getUser();
+if (!user) {
+  return Response.redirect(new URL('/admin/login', request.url));
+}
+
+// Cek apakah user memiliki role admin
+const { data: profileData } = await supabase
+  .from('profiles')
+  .select('id')
+  .eq('id', user.id)
+  .single();
+
+if (!profileData) {
+  return Response.redirect(new URL('/akun/login', request.url));
+}
+
+// Ambil daftar pesanan
+let orders = [];
+try {
+  orders = await getAllOrders();
+} catch (error) {
+  console.error('Error fetching orders:', error);
+}
+---
+
+<AdminLayout title="Pesanan">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-[var(--furniture-brown)]">Manajemen Pesanan</h2>
+  </div>
+  
+  <!-- Tabel Pesanan -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-[var(--furniture-light-brown)]">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">ID Pesanan</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Pengguna</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Total</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Status</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Tanggal</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Aksi</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {orders.map((order) => (
+          <tr key={order.id}>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              {order.id.substring(0, 8)}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {order.user?.email || order.user_id.substring(0, 8)}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              Rp {Number(order.total_amount).toLocaleString('id-ID')}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                  order.status === 'confirmed' ? 'bg-blue-100 text-blue-800' : 
+                  order.status === 'shipped' ? 'bg-indigo-100 text-indigo-800' : 
+                  order.status === 'delivered' ? 'bg-green-100 text-green-800' : 
+                  'bg-red-100 text-red-800'}`}>
+                {order.status}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {new Date(order.created_at).toLocaleDateString('id-ID')}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <a href={`/pesanan/${order.id}`} class="text-blue-600 hover:text-blue-900 mr-3">Lihat</a>
+              <button 
+                onclick="updateOrderStatus('{order.id}', '{order.status}')" 
+                class="text-gray-600 hover:text-gray-900"
+              >
+                Ubah Status
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</AdminLayout>
+
+<script>
+  async function updateOrderStatus(orderId, currentStatus) {
+    const statusOptions = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+    const statusLabels = {
+      'pending': 'Menunggu Pembayaran',
+      'confirmed': 'Dikonfirmasi',
+      'shipped': 'Dikirim',
+      'delivered': 'Diterima',
+      'cancelled': 'Dibatalkan'
+    };
+    
+    let statusHtml = '<select id="statusSelect">';
+    statusOptions.forEach(status => {
+      statusHtml += `<option value="${status}" ${status === currentStatus ? 'selected' : ''}>${statusLabels[status]}</option>`;
+    });
+    statusHtml += '</select>';
+    
+    const div = document.createElement('div');
+    div.innerHTML = `<label for="statusSelect">Ubah Status Pesanan:</label> ${statusHtml}`;
+    
+    if (confirm('Ubah status pesanan?')) {
+      const newStatus = document.getElementById('statusSelect').value;
+      
+      try {
+        const response = await fetch(`/api/admin/orders/${orderId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+        
+        if (response.ok) {
+          alert('Status pesanan berhasil diubah');
+          location.reload();
+        } else {
+          alert('Gagal mengubah status pesanan');
+        }
+      } catch (error) {
+        console.error('Error updating order status:', error);
+        alert('Terjadi kesalahan saat mengubah status pesanan');
+      }
+    }
+  }
+</script>

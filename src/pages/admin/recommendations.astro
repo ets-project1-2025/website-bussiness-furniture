@@ -1,0 +1,173 @@
+---
+// src/pages/admin/recommendations.astro
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getCurrentUser } from '../../lib/auth';
+import { getTopSellingProducts, getTopRatedProducts } from '../../lib/analytics';
+
+// Periksa otentikasi admin
+const { data: { user } } = await supabase.auth.getUser();
+if (!user) {
+  return Response.redirect(new URL('/admin/login', request.url));
+}
+
+// Cek apakah user memiliki role admin
+const { data: profileData } = await supabase
+  .from('profiles')
+  .select('id')
+  .eq('id', user.id)
+  .single();
+
+if (!profileData) {
+  return Response.redirect(new URL('/akun/login', request.url));
+}
+
+// Ambil data produk untuk rekomendasi
+const topSellingProducts = await getTopSellingProducts(10);
+const topRatedProducts = await getTopRatedProducts(10);
+---
+
+<AdminLayout title="Rekomendasi">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-[var(--furniture-brown)]">Manajemen Rekomendasi Produk</h2>
+  </div>
+  
+  <p class="text-gray-600 mb-8">Kelola dan tinjau produk-produk yang direkomendasikan berdasarkan penjualan dan rating</p>
+
+  <!-- Produk Terlaris -->
+  <div class="mb-12">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold text-gray-900">Produk Terlaris</h2>
+      <span class="text-sm text-gray-500">Berdasarkan jumlah terjual</span>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-[var(--furniture-light-brown)]">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Peringkat</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Produk</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Kategori</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Terjual</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Rating</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Harga</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {topSellingProducts.map((product, index) => (
+            <tr key={product.id}>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {index + 1}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  {product.product_images && product.product_images.length > 0 ? (
+                    <img 
+                      src={product.product_images[0].image_url} 
+                      alt={product.name} 
+                      class="w-10 h-10 object-cover rounded mr-4"
+                    />
+                  ) : (
+                    <div class="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10 mr-4" />
+                  )}
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">{product.name}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {product.category_name?.name || 'Tidak ada kategori'}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {product.salesCount || 0} buah
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} xmlns="http://www.w3.org/2000/svg" class={`h-4 w-4 ${i < Math.floor(product.avgRating || 0) ? 'text-yellow-400' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <span class="text-sm text-gray-500 ml-1">({product.avgRating?.toFixed(1) || '0.0'})</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Rp {Number(product.price).toLocaleString('id-ID')}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Produk dengan Rating Tertinggi -->
+  <div>
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold text-gray-900">Produk dengan Rating Tertinggi</h2>
+      <span class="text-sm text-gray-500">Berdasarkan ulasan pengguna</span>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-[var(--furniture-light-brown)]">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Peringkat</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Produk</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Kategori</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Rating</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Jumlah Ulasan</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Harga</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {topRatedProducts.map((product, index) => (
+            <tr key={product.id}>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {index + 1}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  {product.product_images && product.product_images.length > 0 ? (
+                    <img 
+                      src={product.product_images[0].image_url} 
+                      alt={product.name} 
+                      class="w-10 h-10 object-cover rounded mr-4"
+                    />
+                  ) : (
+                    <div class="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10 mr-4" />
+                  )}
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">{product.name}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {product.category_name?.name || 'Tidak ada kategori'}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} xmlns="http://www.w3.org/2000/svg" class={`h-4 w-4 ${i < Math.floor(product.avgRating || 0) ? 'text-yellow-400' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <span class="text-sm text-gray-500 ml-1">({product.avgRating?.toFixed(1) || '0.0'})</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {product.reviewCount || 0} ulasan
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Rp {Number(product.price).toLocaleString('id-ID')}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>

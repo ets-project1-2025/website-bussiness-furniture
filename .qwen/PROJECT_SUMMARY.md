@@ -2,7 +2,7 @@
 
 **1. Ringkasan Proyek**
 
-* **Nama Proyek:** Website E-commerce Furniture (Nama Brand: "WIDI Furnituree).
+* **Nama Proyek:** Website E-commerce Furniture (Nama Brand: "WIDI Furniture").
 * **Tujuan Utama:** Membangun sebuah platform e-commerce furnitur yang tidak hanya fungsional dan profesional, tetapi juga memberikan pengalaman belanja yang unik, interaktif, dan personal melalui fitur-fitur inovatif.
 * **Tech Stack Utama:**
     * **Framework Frontend:** Astro

@@ -1,0 +1,49 @@
+---
+// src/pages/lookbook.astro
+import { getAllLookbookGalleries } from '../lib/products';
+import Layout from '../layouts/Layout.astro';
+
+let galleries = [];
+try {
+  galleries = await getAllLookbookGalleries();
+} catch (error) {
+  console.error('Error fetching lookbook galleries:', error);
+}
+---
+
+<Layout>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Shop the Look</h1>
+    <p class="text-gray-600 mb-8">Temukan furnitur yang Anda sukai dari berbagai gaya ruangan yang kami tawarkan</p>
+
+    {galleries.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {galleries.map((gallery) => (
+          <a href={`/lookbook/${gallery.id}`} key={gallery.id} class="block group">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-xl group-hover:-translate-y-1">
+              {gallery.cover_image_url ? (
+                <img 
+                  src={gallery.cover_image_url} 
+                  alt={gallery.title} 
+                  class="w-full h-64 object-cover"
+                />
+              ) : (
+                <div class="bg-gray-200 border-2 border-dashed rounded-t-lg w-full h-64 flex items-center justify-center text-gray-500">
+                  Tidak ada gambar
+                </div>
+              )}
+              <div class="p-4">
+                <h3 class="text-lg font-semibold text-gray-900 group-hover:text-indigo-600">{gallery.title}</h3>
+                <p class="text-gray-600 mt-2 line-clamp-2">{gallery.description}</p>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-gray-600">Belum ada galeri lookbook yang tersedia.</p>
+      </div>
+    )}
+  </div>
+</Layout>

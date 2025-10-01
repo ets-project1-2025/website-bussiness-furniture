@@ -1,0 +1,62 @@
+---
+// src/pages/lookbook/[id].astro
+import { getLookbookGalleryById } from '../../lib/products';
+import Layout from '../../layouts/Layout.astro';
+import LookbookInteractive from '../../components/LookbookInteractive.jsx';
+
+// Dapatkan ID dari URL
+const id = Astro.params.id;
+
+let gallery = null;
+try {
+  gallery = await getLookbookGalleryById(id);
+} catch (error) {
+  console.error('Error fetching lookbook gallery:', error);
+}
+---
+
+<Layout>
+  <div class="container mx-auto px-4 py-8">
+    {gallery ? (
+      <div>
+        <div class="mb-6">
+          <h1 class="text-3xl font-bold text-gray-900">{gallery.title}</h1>
+          <p class="text-gray-600 mt-2">{gallery.description}</p>
+        </div>
+
+        <LookbookInteractive gallery={gallery} />
+
+        <div class="mt-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Furnitur dalam Gaya Ini</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {gallery.lookbook_hotspots.map((hotspot) => (
+              <a href={`/produk/${hotspot.product_id}`} key={hotspot.id} class="block group">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                  {hotspot.product.product_images && hotspot.product.product_images.length > 0 ? (
+                    <img 
+                      src={hotspot.product.product_images[0].image_url} 
+                      alt={hotspot.product.name} 
+                      class="w-full h-48 object-cover group-hover:opacity-90"
+                    />
+                  ) : (
+                    <div class="bg-gray-200 border-2 border-dashed w-full h-48 flex items-center justify-center text-gray-500">
+                      Tidak ada gambar
+                    </div>
+                  )}
+                  <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-indigo-600">{hotspot.product.name}</h3>
+                    <p class="text-indigo-600 font-bold mt-2">Rp{Number(hotspot.product.price).toLocaleString('id-ID')}</p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-gray-600">Galeri lookbook tidak ditemukan.</p>
+      </div>
+    )}
+  </div>
+</Layout>

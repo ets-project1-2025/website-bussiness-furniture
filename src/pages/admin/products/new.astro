@@ -1,0 +1,285 @@
+---
+// src/pages/admin/products/new.astro
+import Layout from '../../../layouts/Layout.astro';
+import { isAuthenticated, getCurrentUser } from '../../../lib/auth';
+import { getAllCategories } from '../../../lib/admin-api';
+
+// Cek otentikasi sebelum memuat halaman
+let user = null;
+
+try {
+  user = await getCurrentUser();
+  if (!user) {
+    // Redirect ke halaman login jika tidak otentikasi
+    return Astro.redirect('/admin/login');
+  }
+} catch (error) {
+  console.error('Error checking authentication:', error);
+  return Astro.redirect('/admin/login');
+}
+
+// Ambil data kategori untuk dropdown
+const categories = await getAllCategories();
+---
+
+<Layout>
+  <div class="min-h-screen bg-[var(--furniture-cream)]">
+    <header class="bg-[var(--furniture-brown)] text-white p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-bold">Dasbor Admin - WIDI Furniture</h1>
+        <div class="flex items-center space-x-4">
+          <span>Halo, {user.email}</span>
+          <a href="/admin/logout" class="btn-secondary text-sm">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <nav class="bg-[var(--furniture-light-brown)] p-4">
+      <div class="container mx-auto">
+        <ul class="flex space-x-6">
+          <li><a href="/admin/" class="text-[var(--furniture-brown)] hover:underline">Beranda</a></li>
+          <li><a href="/admin/products" class="text-[var(--furniture-brown)] font-medium hover:underline">Produk</a></li>
+          <li><a href="/admin/categories" class="text-[var(--furniture-brown)] hover:underline">Kategori</a></li>
+          <li><a href="/admin/orders" class="text-[var(--furniture-brown)] hover:underline">Pesanan</a></li>
+          <li><a href="/admin/users" class="text-[var(--furniture-brown)] hover:underline">Pengguna</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="container mx-auto py-8 px-4">
+      <h2 class="text-2xl font-bold text-[var(--furniture-brown)] mb-6">Tambah Produk Baru</h2>
+      
+      <form class="bg-white p-6 rounded-lg shadow-md max-w-3xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="md:col-span-2">
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Produk *</label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--furniture-brown)] focus:border-[var(--furniture-brown)]"
+            >
+          </div>
+          
+          <div class="md:col-span-2">
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Produk</label>
+            <textarea 
+              id="description" 
+              name="description" 
+              rows="4"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--furniture-brown)] focus:border-[var(--furniture-brown)]"
+            ></textarea>
+          </div>
+          
+          <div>
+            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp) *</label>
+            <input 
+              type="number" 
+              id="price" 
+              name="price" 
+              required
+              min="0"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--furniture-brown)] focus:border-[var(--furniture-brown)]"
+            >
+          </div>
+          
+          <div>
+            <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+            <select 
+              id="category" 
+              name="category"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--furniture-brown)] focus:border-[var(--furniture-brown)]"
+            >
+              <option value="">Pilih Kategori</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>{category.name}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <label for="length" class="block text-sm font-medium text-gray-700 mb-1">Panjang (cm)</label>
+            <input 
+              type="number" 
+              id="length" 
+              name="length"
+              min="0"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--furniture-brown)] focus:border-[var(--furniture-brown)]"
+            >
+          </div>
+          
+          <div>
+            <label for="width" class="block text-sm font-medium text-gray-700 mb-1">Lebar (cm)</label>
+            <input 
+              type="number" 
+              id="width" 
+              name="width"
+              min="0"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--furniture-brown)] focus:border-[var(--furniture-brown)]"
+            >
+          </div>
+          
+          <div>
+            <label for="height" class="block text-sm font-medium text-gray-700 mb-1">Tinggi (cm)</label>
+            <input 
+              type="number" 
+              id="height" 
+              name="height"
+              min="0"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--furniture-brown)] focus:border-[var(--furniture-brown)]"
+            >
+          </div>
+          
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Material</label>
+            <div class="flex flex-wrap gap-2" id="material-tags">
+              <span class="hidden">Placeholder untuk material tags</span>
+            </div>
+            <div class="mt-1 flex">
+              <input 
+                type="text" 
+                id="new-material" 
+                placeholder="Tambahkan material (tekan Enter)"
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-[var(--furniture-brown)] focus:border-[var(--furniture-brown)]"
+              >
+              <button 
+                type="button" 
+                onclick="addMaterialTag()"
+                class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-[var(--furniture-brown)] hover:bg-[var(--furniture-light-brown)] focus:outline-none"
+              >
+                Tambah
+              </button>
+            </div>
+            <input type="hidden" id="materials" name="materials" value="[]">
+          </div>
+          
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Gambar Produk</label>
+            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+              <div class="space-y-1 text-center">
+                <div class="flex text-sm text-gray-600">
+                  <label for="product-images" class="relative cursor-pointer bg-white rounded-md font-medium text-[var(--furniture-brown)] hover:text-[var(--furniture-light-brown)] focus-within:outline-none">
+                    <span>Unggah file</span>
+                    <input id="product-images" name="product-images" type="file" class="sr-only" multiple accept="image/*">
+                  </label>
+                  <p class="pl-1">atau seret dan lepas</p>
+                </div>
+                <p class="text-xs text-gray-500">
+                  PNG, JPG, GIF hingga 10MB
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-8 flex justify-end space-x-3">
+          <a href="/admin/products" class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+            Batal
+          </a>
+          <button 
+            type="button" 
+            onclick="submitProduct()"
+            class="px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[var(--furniture-brown)] hover:bg-[var(--furniture-light-brown)] focus:outline-none"
+          >
+            Simpan Produk
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <footer class="bg-[var(--furniture-light-brown)] py-6 mt-12">
+      <div class="container mx-auto text-center text-[var(--furniture-brown)]">
+        <p>© {new Date().getFullYear()} WIDI Furniture - Dasbor Admin</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    let materials = [];
+    
+    function addMaterialTag() {
+      const input = document.getElementById('new-material');
+      const value = input.value.trim();
+      
+      if (value && !materials.includes(value)) {
+        materials.push(value);
+        updateMaterialTags();
+        input.value = '';
+      }
+    }
+    
+    function removeMaterialTag(material) {
+      materials = materials.filter(m => m !== material);
+      updateMaterialTags();
+    }
+    
+    function updateMaterialTags() {
+      const tagsContainer = document.getElementById('material-tags');
+      const materialsInput = document.getElementById('materials');
+      
+      // Kosongkan container kecuali placeholder
+      tagsContainer.innerHTML = '<span class="hidden">Placeholder untuk material tags</span>';
+      
+      materials.forEach(material => {
+        const tag = document.createElement('span');
+        tag.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--furniture-brown)] text-white';
+        tag.innerHTML = `
+          ${material}
+          <button type="button" onclick="removeMaterialTag('${material}')" class="ml-1 inline-flex text-white hover:text-gray-200">
+            <span class="sr-only">Hapus</span>
+            ×
+          </button>
+        `;
+        tagsContainer.appendChild(tag);
+      });
+      
+      materialsInput.value = JSON.stringify(materials);
+    }
+    
+    function submitProduct() {
+      // Ambil nilai dari form
+      const name = document.getElementById('name').value;
+      const description = document.getElementById('description').value;
+      const price = parseFloat(document.getElementById('price').value);
+      const categoryId = document.getElementById('category').value;
+      const length = parseFloat(document.getElementById('length').value) || null;
+      const width = parseFloat(document.getElementById('width').value) || null;
+      const height = parseFloat(document.getElementById('height').value) || null;
+      
+      // Validasi sederhana
+      if (!name || !price) {
+        alert('Nama dan harga wajib diisi');
+        return;
+      }
+      
+      // Buat objek dimensi
+      const dimensions = {};
+      if (length) dimensions.length = length;
+      if (width) dimensions.width = width;
+      if (height) dimensions.height = height;
+      
+      // Buat data produk
+      const productData = {
+        name,
+        description,
+        price,
+        dimensions: Object.keys(dimensions).length > 0 ? dimensions : null,
+        materials: materials,
+        category_id: categoryId || null
+      };
+      
+      // Dalam implementasi nyata, Anda akan mengirim data ini ke API
+      console.log('Data produk yang akan dikirim:', productData);
+      alert('Produk akan disimpan (fungsi simpan akan diimplementasikan nanti)');
+    }
+    
+    // Tambahkan event listener untuk menekan Enter di input material
+    document.getElementById('new-material').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addMaterialTag();
+      }
+    });
+  </script>
+</Layout>

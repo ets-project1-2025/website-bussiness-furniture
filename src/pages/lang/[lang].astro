@@ -1,0 +1,24 @@
+---
+// src/pages/lang/[lang].astro
+// Halaman ini digunakan untuk mengganti bahasa aplikasi
+
+// Dapatkan parameter bahasa dari URL
+const lang = Astro.params.lang;
+
+// Validasi bahwa bahasa yang diminta valid
+const validLangs = ['id', 'en'];
+if (!validLangs.includes(lang)) {
+  // Jika bahasa tidak valid, kembalikan ke halaman sebelumnya atau halaman utama
+  return Astro.redirect('/');
+}
+
+// Dalam implementasi nyata, Anda mungkin ingin menyimpan preferensi bahasa
+// ke dalam cookie atau localStorage di sini
+// Contoh: document.cookie = `lang=${lang}; path=/; max-age=31536000` (1 tahun)
+
+// Redirect kembali ke halaman sebelumnya
+const referer = Astro.request.headers.get('Referer') || '/';
+return Astro.redirect(referer);
+---
+
+<!-- Ini adalah halaman kosong yang hanya menangani perubahan bahasa -->

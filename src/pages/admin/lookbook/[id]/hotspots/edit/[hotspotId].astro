@@ -1,0 +1,109 @@
+---
+// src/pages/admin/lookbook/[id]/hotspots/edit/[hotspotId].astro
+import { getLookbookGalleryById, getAllProducts, getHotspotsByGalleryId, updateLookbookHotspot } from '../../../../../../lib/admin-api';
+import Layout from '../../../../../../layouts/Layout.astro';
+
+// Dapatkan ID dari URL
+const galleryId = Astro.params.id;
+const hotspotId = Astro.params.hotspotId;
+
+// Periksa otentikasi admin
+const { data: { user } } = await supabase.auth.getUser();
+if (!user) {
+  return Response.redirect(new URL('/admin/login', request.url));
+}
+
+// Cek apakah user memiliki role admin
+const { data: profileData } = await supabase
+  .from('profiles')
+  .select('id')
+  .eq('id', user.id)
+  .single();
+
+if (!profileData) {
+  return Response.redirect(new URL('/akun/login', request.url));
+}
+
+// Ambil data galeri, produk, dan hotspot
+let gallery = null;
+let products = [];
+let hotspot = null;
+try {
+  gallery = await getLookbookGalleryById(galleryId);
+  products = await getAllProducts();
+  const allHotspots = await getHotspotsByGalleryId(galleryId);
+  hotspot = allHotspots.find(h => h.id === hotspotId);
+} catch (error) {
+  console.error('Error fetching lookbook gallery, products, or hotspot:', error);
+}
+
+// Proses form jika ada submit
+if (request.method === 'POST') {
+  const formData = await request.formData();
+  const productId = formData.get('product_id');
+  const coordinates = JSON.parse(formData.get('coordinates'));
+
+  try {
+    await updateLookbookHotspot(hotspotId, {
+      gallery_id: galleryId,
+      product_id: productId,
+      coordinates
+    });
+    
+    return Response.redirect(new URL(`/admin/lookbook/${galleryId}`, request.url));
+  } catch (error) {
+    console.error('Error updating lookbook hotspot:', error);
+  }
+}
+---
+
+<Layout>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Hotspot Produk untuk: {gallery?.title}</h1>
+    
+    {hotspot ? (
+      <form method="post" class="bg-white shadow-md rounded-lg p-6">
+        <div class="mb-4">
+          <label for="product_id" class="block text-gray-700 font-medium mb-2">Pilih Produk</label>
+          <select 
+            id="product_id" 
+            name="product_id" 
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">-- Pilih Produk --</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.id} selected={product.id === hotspot.product_id}>
+                {product.name} - Rp{Number(product.price).toLocaleString('id-ID')}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="coordinates" class="block text-gray-700 font-medium mb-2">Koordinat Hotspot (format JSON: {"{"}x: number, y: number{"}"})</label>
+          <input 
+            type="text" 
+            id="coordinates" 
+            name="coordinates" 
+            required
+            value={JSON.stringify(hotspot.coordinates)}
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <p class="text-sm text-gray-500 mt-1">Koordinat dalam persen (0-100) dari posisi gambar</p>
+        </div>
+
+        <div class="flex justify-end">
+          <button 
+            type="submit" 
+            class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+          >
+            Simpan Perubahan
+          </button>
+        </div>
+      </form>
+    ) : (
+      <p>Hotspot tidak ditemukan.</p>
+    )}
+  </div>
+</Layout>

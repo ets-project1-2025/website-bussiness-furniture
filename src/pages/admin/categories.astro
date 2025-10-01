@@ -1,0 +1,86 @@
+---
+// src/pages/admin/categories.astro
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getCurrentUser } from '../../lib/auth';
+import { getAllCategories } from '../../lib/admin-api';
+
+// Cek otentikasi sebelum memuat halaman
+let user = null;
+
+try {
+  user = await getCurrentUser();
+  if (!user) {
+    // Redirect ke halaman login jika tidak otentikasi
+    return Astro.redirect('/admin/login');
+  }
+} catch (error) {
+  console.error('Error checking authentication:', error);
+  return Astro.redirect('/admin/login');
+}
+
+// Ambil data kategori
+const categories = await getAllCategories();
+---
+
+<AdminLayout title="Kategori">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-[var(--furniture-brown)]">Manajemen Kategori</h2>
+    <a href="/admin/categories/new" class="btn-primary">Tambah Kategori Baru</a>
+  </div>
+  
+  <!-- Tabel Kategori -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-[var(--furniture-light-brown)]">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Nama Kategori</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Slug</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--furniture-brown)] uppercase tracking-wider">Aksi</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {categories.map((category) => (
+          <tr key={category.id}>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">{category.name}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {category.slug}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <a href={`/admin/categories/edit/${category.id}`} class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
+              <button 
+                onclick="deleteCategoryConfirm('{category.id}', '{category.name}')" 
+                class="text-red-600 hover:text-red-900"
+              >
+                Hapus
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function deleteCategoryConfirm(categoryId, categoryName) {
+      if (confirm(`Apakah Anda yakin ingin menghapus kategori "${categoryName}"? Tindakan ini tidak dapat dibatalkan dan akan mempengaruhi produk yang terkait.`)) {
+        try {
+          // Dalam implementasi nyata, Anda akan memanggil API untuk menghapus kategori
+          // const response = await fetch(`/api/admin/categories/${categoryId}`, { method: 'DELETE' });
+          // if (response.ok) {
+          //   location.reload();
+          // } else {
+          //   alert('Gagal menghapus kategori');
+          // }
+          
+          // Untuk saat ini, kita hanya menampilkan pesan bahwa kategori akan dihapus
+          alert(`Kategori "${categoryName}" akan dihapus (fungsi hapus akan diimplementasikan nanti)`);
+        } catch (error) {
+          console.error('Error deleting category:', error);
+          alert('Terjadi kesalahan saat menghapus kategori');
+        }
+      }
+    }
+  </script>
+</AdminLayout>
