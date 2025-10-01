@@ -1,5 +1,5 @@
 .categoryItem {
-  @apply overflow-hidden relative justify-end cursor-pointer capitalize flex flex-col bg-white h-96 z-50 object-cover text-white;
+  @apply overflow-hidden relative justify-end cursor-pointer capitalize flex flex-col bg-white h-96 z-0 object-cover text-white;
   &:nth-child(1) {
     @apply w-full mb-4;
   }

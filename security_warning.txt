@@ -1,0 +1,13 @@
+⚠️ PERINGATAN KEAMANAN: PENYIMPANAN API TOKEN ⚠️
+
+Token API yang Anda berikan (`skRYMamiHw1VjbvyijJ0vNufnGWPwej3nLuF3awTVuMJiGMLgBQIdTqMpDRXT8tqaQnf9swFScgKD1ZjP7rQZrgb2DJdmqKO8nXiYssBZpvWzaH7MftqebdNZfxPDIsJU1vI5uOGasBvrGAYagGz38WD2FA26Fpe2N6CYvTN0Qo9RFbrjW6l`) adalah token rahasia dan sensitif. Saya telah mencatat penggunaan token ini di sini, dan sangat disarankan untuk:
+
+1. SEGERA MENGHAPUS/MEMBATALKAN token ini dari akun Sanity Anda
+2. MEMBUAT token baru dengan izin yang lebih terbatas sesuai kebutuhan
+
+Alasan keamanan:
+- Token ini adalah token master yang memberikan akses penuh ke proyek Sanity Anda
+- Jika disimpan dalam file atau kode, token bisa terungkap ke pihak tidak berwenang
+- Token ini seharusnya tidak pernah disimpan dalam repositori atau file konfigurasi yang bisa diakses publik
+
+Jika token ini sudah terungkap (seperti dalam percakapan ini), itu dianggap telah dikompromikan dan sebaiknya segera dibatalkan.

@@ -12,9 +12,10 @@ Demo live at: [nextjs-sanity-ecommerce-loq24.vercel.app](https://nextjs-sanity-e
 
 ### Setting up Sanity
 
-- Head over to the [Sanity.io's](https://www.sanity.io/docs/create-a-sanity-project?ref=navbar) getting started page and generate a blank template
+- If using GitHub Codespaces: Follow the configuration guide at [sanity/CONFIGURATION_GUIDE.md](./sanity/CONFIGURATION_GUIDE.md)
+- Otherwise, head over to the [Sanity.io's](https://www.sanity.io/docs/create-a-sanity-project?ref=navbar) getting started page and generate a blank template
 - Copy the schema files located in `sanity/schemas` from this project to your sanity project's `schemas` directory
-- Make sure to replace the client configuration found under `src/lib/sanity/client.ts` with your own Sanity project
+- Make sure to replace the client configuration found under `src/lib/sanity.js` with your own Sanity project details
 
 ### Setting up Stripe
 

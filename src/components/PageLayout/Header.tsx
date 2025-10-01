@@ -24,7 +24,7 @@ const Header = () => {
   return (
     <>
       <Cart />
-      <header className="bg-white shadow-md sticky top-0 z-50">
+      <header className="bg-white shadow-md sticky top-0 z-[100]">
         <div className="w-full mx-auto max-w-7xl px-4">
           <div className="flex justify-between items-center py-4">
             {/* Logo */}
@@ -52,7 +52,7 @@ const Header = () => {
             
             {/* Cart and Mobile Menu Button */}
             <div className="flex items-center space-x-4">
-              <button className="relative z-50 border-0 bg-transparent outline-0" onClick={toggleCartVisibility}>
+              <button className="relative z-0 border-0 bg-transparent outline-0" onClick={toggleCartVisibility}>
                 <MdShoppingCart
                   color="gray"
                   size={28}
@@ -66,7 +66,7 @@ const Header = () => {
               
               {/* Mobile Menu Button */}
               <button 
-                className="md:hidden z-50 border-0 bg-transparent outline-0 text-gray-700"
+                className="md:hidden z-[90] border-0 bg-transparent outline-0 text-gray-700"
                 onClick={toggleMenu}
               >
                 {isMenuOpen ? <MdClose size={28} /> : <MdMenu size={28} />}

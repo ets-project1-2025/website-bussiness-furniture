@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sanity-dev": "cd sanity && npx sanity dev",
+    "sanity-build": "cd sanity && npx sanity build",
+    "studio-dev": "cd studio-ets.project1.2025 && npx sanity dev",
+    "studio-build": "cd studio-ets.project1.2025 && npx sanity build"
   },
   "dependencies": {
     "@portabletext/react": "^1.0.6",
