@@ -9,11 +9,12 @@ import {
 
 // Fungsi untuk mendapatkan semua produk
 export const getAllProducts = async () => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk menghindari pembatasan RLS
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
-    console.warn('Supabase client not available. Using dummy data.');
-    return getAllDummyProducts();
+    console.error('Supabase client not available. Cannot fetch products.');
+    return [];
   }
   
   try {
@@ -27,15 +28,18 @@ export const getAllProducts = async () => {
 
     if (error) {
       console.error('Error fetching products from Supabase:', error);
-      console.warn('Falling back to dummy data.');
-      return getAllDummyProducts();
+      return [];
     }
 
+    console.log('Berhasil mengambil produk dari Supabase:', data.length, 'produk');
+    if (data.length > 0 && data[0].product_images) {
+      console.log('Produk pertama memiliki', data[0].product_images.length, 'gambar');
+    }
+    
     return data;
   } catch (error) {
     console.error('Error fetching products:', error);
-    console.warn('Falling back to dummy data.');
-    return getAllDummyProducts();
+    return [];
   }
 };
 

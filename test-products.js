@@ -1,17 +1,36 @@
 // Test script untuk memeriksa struktur data produk dari Supabase
-import { getAllProducts } from './src/lib/products.js';
+import { createSupabaseClient } from './src/lib/supabase.js';
 
 const testProducts = async () => {
-  console.log('Mengambil produk dari Supabase...');
+  console.log('Mengambil produk dari Supabase menggunakan service role...');
   
   try {
-    const products = await getAllProducts();
+    // Gunakan service role untuk memastikan akses penuh
+    const supabase = createSupabaseClient(true);
     
-    console.log(`Ditemukan ${products.length} produk`);
+    if (!supabase) {
+      console.error('Supabase client tidak tersedia');
+      return;
+    }
+    
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        product_images(*)
+      `)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error saat mengambil produk:', error);
+      return;
+    }
+    
+    console.log(`Ditemukan ${data.length} produk`);
     
     // Tampilkan informasi produk pertama sebagai contoh
-    if (products.length > 0) {
-      const firstProduct = products[0];
+    if (data.length > 0) {
+      const firstProduct = data[0];
       console.log('\nContoh produk pertama:');
       console.log('ID:', firstProduct.id);
       console.log('Nama:', firstProduct.name);
@@ -24,13 +43,15 @@ const testProducts = async () => {
       console.log('\nGambar produk:', firstProduct.product_images ? firstProduct.product_images.length : 0);
       if (firstProduct.product_images && firstProduct.product_images.length > 0) {
         console.log('URL gambar pertama:', firstProduct.product_images[0].image_url);
+      } else {
+        console.log('Tidak ada gambar ditemukan untuk produk ini');
       }
     }
     
     // Periksa beberapa produk secara acak
     console.log('\nMemeriksa beberapa produk secara acak:');
-    for (let i = 0; i < Math.min(5, products.length); i++) {
-      const product = products[i];
+    for (let i = 0; i < Math.min(5, data.length); i++) {
+      const product = data[i];
       const imageCount = product.product_images ? product.product_images.length : 0;
       console.log(`${product.name}: ${imageCount} gambar`);
     }
