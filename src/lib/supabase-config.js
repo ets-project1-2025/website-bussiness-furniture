@@ -1,4 +1,4 @@
-// src/lib/supabase-config.ts
+// src/lib/supabase-config.js
 export const TABLES = {
   PRODUCTS: 'products',
   CATEGORIES: 'categories',
@@ -11,10 +11,4 @@ export const TABLES = {
   CART_ITEMS: 'cart_items',
   LOOKBOOK_GALLERIES: 'lookbook_galleries',
   LOOKBOOK_HOTSPOTS: 'lookbook_hotspots',
-} as const;
-
-export const BUCKETS = {
-  PRODUCT_IMAGES: 'product-images',
-  CATEGORY_IMAGES: 'category-images',
-  LOOKBOOK_GALLERIES: 'lookbook-galleries',
-} as const;
+};
