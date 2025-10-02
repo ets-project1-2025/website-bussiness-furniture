@@ -86,14 +86,16 @@ export const getCurrentUser = async (Astro = null) => {
 
   if (Astro) {
     // Jika konteks Astro tersedia (SSR), gunakan server client
-    const { client } = createSupabaseServerClient(Astro);
-    supabase = client;
+    console.log("getCurrentUser: Menggunakan konteks Astro (SSR mode)"); // Log
+    const serverClient = createSupabaseServerClient(Astro);
+    supabase = serverClient;
     if (!supabase) {
       console.warn('Supabase server client not available.');
       return null;
     }
   } else {
     // Jika tidak (klien), gunakan client anon
+    console.log("getCurrentUser: Tidak ada konteks Astro (Client mode)"); // Log
     supabase = createSupabaseClient();
     if (!supabase) {
       console.warn('Supabase client not available.');
@@ -101,7 +103,9 @@ export const getCurrentUser = async (Astro = null) => {
     }
   }
 
+  console.log("getCurrentUser: Memanggil supabase.auth.getUser()..."); // Log
   const { data: { user } } = await supabase.auth.getUser();
+  console.log("getCurrentUser: Data user diperoleh:", user ? `UID: ${user.id}` : "null"); // Log
   return user;
 };
 
