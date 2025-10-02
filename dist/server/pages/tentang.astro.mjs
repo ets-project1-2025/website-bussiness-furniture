@@ -1,0 +1,38 @@
+/* empty css                                     */
+import { e as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute } from '../chunks/astro/server_CJN7PJsY.mjs';
+import 'kleur/colors';
+import { $ as $$Layout } from '../chunks/Layout_DAI1A3cM.mjs';
+export { renderers } from '../renderers.mjs';
+
+const $$Tentang = createComponent(($$result, $$props, $$slots) => {
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, {}, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<div class="min-h-screen bg-[var(--furniture-cream)]"> <!-- Hero Section --> <section class="bg-[var(--furniture-brown)] text-white py-16"> <div class="container mx-auto px-4 text-center"> <h1 class="text-4xl font-bold mb-4">Tentang Kami</h1> <p class="text-xl max-w-2xl mx-auto">Menyediakan furnitur berkualitas tinggi yang menggabungkan desain modern dengan kehangatan alami kayu</p> </div> </section> <!-- About Content --> <section class="py-16"> <div class="container mx-auto px-4"> <div class="flex flex-col lg:flex-row items-center gap-12"> <div class="lg:w-1/2"> <h2 class="text-3xl font-bold text-[var(--furniture-brown)] mb-6">Kisah Kami</h2> <p class="text-gray-700 mb-4">
+Berdiri sejak 2020, WIDI Furniture berkomitmen untuk menyediakan furnitur berkualitas tinggi 
+              yang menggabungkan desain modern dengan kehangatan alami kayu. Kami percaya bahwa furnitur 
+              bukan hanya tentang fungsi, tetapi juga tentang menciptakan suasana yang nyaman dan indah di rumah Anda.
+</p> <p class="text-gray-700 mb-4">
+Tim kami terdiri dari para perajin berpengalaman yang mencintai kerajinan tangan dan desain yang indah. 
+              Setiap produk kami adalah hasil dari ketelitian, keahlian, dan kecintaan terhadap kerajinan furnitur yang luar biasa.
+</p> <p class="text-gray-700">
+Dengan berbagai pilihan bahan bermutu dan desain yang unik, kami berusaha memberikan pengalaman 
+              berbelanja yang menyenangkan dan layanan pelanggan yang luar biasa kepada setiap pelanggan kami.
+</p> </div> <div class="lg:w-1/2"> <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=800&q=80" alt="Furniture di ruangan tamu" class="w-full h-auto rounded-lg shadow-lg"> </div> </div> </div> </section> <!-- Values Section --> <section class="py-16 bg-[var(--furniture-light-brown)]"> <div class="container mx-auto px-4"> <h2 class="text-3xl font-bold text-center text-[var(--furniture-brown)] mb-12">Nilai-Nilai Kami</h2> <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <div class="bg-white p-6 rounded-lg shadow-md text-center"> <div class="w-16 h-16 bg-[var(--furniture-brown)] rounded-full flex items-center justify-center mx-auto mb-4"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path> </svg> </div> <h3 class="text-xl font-semibold text-[var(--furniture-brown)] mb-2">Kualitas</h3> <p class="text-gray-700">Kami hanya menggunakan bahan-bahan terbaik dan proses produksi yang teliti untuk memastikan kualitas produk terbaik.</p> </div> <div class="bg-white p-6 rounded-lg shadow-md text-center"> <div class="w-16 h-16 bg-[var(--furniture-brown)] rounded-full flex items-center justify-center mx-auto mb-4"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path> </svg> </div> <h3 class="text-xl font-semibold text-[var(--furniture-brown)] mb-2">Desain Inovatif</h3> <p class="text-gray-700">Kami terus menghadirkan desain terbaru yang menggabungkan keindahan estetika dengan kenyamanan fungsional.</p> </div> <div class="bg-white p-6 rounded-lg shadow-md text-center"> <div class="w-16 h-16 bg-[var(--furniture-brown)] rounded-full flex items-center justify-center mx-auto mb-4"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path> </svg> </div> <h3 class="text-xl font-semibold text-[var(--furniture-brown)] mb-2">Keberlanjutan</h3> <p class="text-gray-700">Kami menggunakan bahan baku yang diperoleh secara bertanggung jawab untuk menjaga lingkungan.</p> </div> </div> </div> </section> <!-- Team Section --> <section class="py-16"> <div class="container mx-auto px-4"> <h2 class="text-3xl font-bold text-center text-[var(--furniture-brown)] mb-12">Tim Kami</h2> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"> ${[
+    { name: "Widi Pratama", role: "Founder & CEO", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" },
+    { name: "Sari Dewi", role: "Kepala Desain", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5cd?auto=format&fit=crop&w=200&q=80" },
+    { name: "Budi Santoso", role: "Kepala Produksi", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" },
+    { name: "Lina Kusuma", role: "Layanan Pelanggan", image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=200&q=80" }
+  ].map((member) => renderTemplate`<div class="text-center"${addAttribute(member.name, "key")}> <img${addAttribute(member.image, "src")}${addAttribute(member.name, "alt")} class="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-[var(--furniture-light-brown)]"> <h3 class="text-lg font-semibold text-gray-900">${member.name}</h3> <p class="text-[var(--furniture-brown)]">${member.role}</p> </div>`)} </div> </div> </section> </div> ` })}`;
+}, "/workspaces/website-bussiness-furniture/src/pages/tentang.astro", void 0);
+
+const $$file = "/workspaces/website-bussiness-furniture/src/pages/tentang.astro";
+const $$url = "/tentang";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$Tentang,
+  file: $$file,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

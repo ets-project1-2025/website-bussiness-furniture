@@ -1,8 +1,9 @@
-// src/lib/supabase.js
 import { createClient } from '@supabase/supabase-js';
 
+// src/lib/supabase.js
+
 // Fungsi untuk membuat client Supabase
-export const createSupabaseClient = () => {
+const createSupabaseClient = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -16,9 +17,11 @@ export const createSupabaseClient = () => {
 };
 
 // Membuat instance client Supabase
-export const supabase = createSupabaseClient();
+const supabase = createSupabaseClient();
 
 // Fungsi untuk mendapatkan client Supabase
-export const getSupabase = () => {
+const getSupabase = () => {
   return supabase;
 };
+
+export { createSupabaseClient as c, getSupabase as g };

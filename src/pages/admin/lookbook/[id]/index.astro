@@ -1,7 +1,7 @@
 ---
 // src/pages/admin/lookbook/[id]/index.astro
-import { getLookbookGalleryById, getHotspotsByGalleryId, deleteLookbookHotspot } from '../../../lib/admin-api.js';
-import Layout from '../../../layouts/Layout.astro';
+import { getLookbookGalleryById, getHotspotsByGalleryId, deleteLookbookHotspot } from '../../../../lib/admin-api.js';
+import Layout from '../../../../layouts/Layout.astro';
 
 // Dapatkan ID dari URL
 const id = Astro.params.id;
