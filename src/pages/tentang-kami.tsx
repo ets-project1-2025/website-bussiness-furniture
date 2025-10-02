@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import Link from "next/link";
+import Link from "lib/nextjs-shim/link";
 import { createClient } from "lib/supabase/client";
 import MetaHead from "components/MetaHead";
 

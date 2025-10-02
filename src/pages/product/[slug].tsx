@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import Image from "lib/nextjs-shim/image";
+import Link from "lib/nextjs-shim/link";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { ProductSchema } from "lib/interfaces/schema";
 import CartItemsContext from "contexts/cartItemsContext";
@@ -294,7 +294,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   // }
 
   // Temporary: Menggunakan data dummy
-  const slugs = [];
+  const slugs: any[] = [];
 
   const paths = slugs.map((item: { slug: string }) => ({
     params: { slug: item.slug }

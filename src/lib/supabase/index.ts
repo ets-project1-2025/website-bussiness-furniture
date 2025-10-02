@@ -29,7 +29,7 @@ export async function getAllProducts() {
 }
 
 // Contoh query untuk mendapatkan produk berdasarkan slug
-export async function getProductBySlug(slug) {
+export async function getProductBySlug(slug: string) {
   // TODO: Implementasi query untuk mendapatkan produk berdasarkan slug dari Supabase
   // const supabase = createClient();
   // const { data, error } = await supabase.from(TABLES.PRODUCTS).select(`
@@ -70,7 +70,7 @@ export async function getAllCategories() {
 }
 
 // Query untuk mendapatkan kategori berdasarkan slug
-export async function getCategoryBySlug(slug) {
+export async function getCategoryBySlug(slug: string) {
   // TODO: Implementasi query untuk mendapatkan kategori berdasarkan slug dari Supabase
   // const supabase = createClient();
   // const { data, error } = await supabase.from(TABLES.CATEGORIES).select('*').eq('slug', slug).single();

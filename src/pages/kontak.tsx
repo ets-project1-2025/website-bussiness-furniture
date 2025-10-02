@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Link from "next/link";
+import Link from "lib/nextjs-shim/link";
 import MetaHead from "components/MetaHead";
 
 const Contact: React.FC = () => {

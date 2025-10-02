@@ -62,8 +62,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   // }
 
   // Temporary: Menggunakan data dummy
-  const products = [];
-  const category = { id: '', title: '', description: '', slug: params?.slug as string };
+  const products: any[] = [];
+  const category: any = { id: '', title: '', description: '', slug: params?.slug as string };
 
   return {
     props: { products, category },
@@ -84,7 +84,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   // }
 
   // Temporary: Menggunakan data dummy
-  const slugs = [];
+  const slugs: any[] = [];
 
   const paths = slugs.map((item: { slug: string }) => ({
     params: { slug: item.slug }

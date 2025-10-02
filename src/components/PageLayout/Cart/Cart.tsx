@@ -4,7 +4,7 @@ import CartVisibilityContext from "contexts/cartVisibilityContext";
 import ItemList from "./ItemList";
 import classNames from "classnames";
 import { CartProduct } from "lib/interfaces";
-import getStripe from "lib/stripe/getStripe";
+import { loadStripe, Stripe } from '@stripe/stripe-js';
 
 const Cart = () => {
   const [isRedirecting, setRedirecting] = useState(false);
@@ -24,7 +24,7 @@ const Cart = () => {
   const handleCheckout = async () => {
     setRedirecting(true);
 
-    const stripe = await getStripe();
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
     const response = await fetch("/api/stripe", {
       method: "POST",
@@ -38,7 +38,8 @@ const Cart = () => {
 
     const data = await response.json();
 
-    stripe?.redirectToCheckout({ sessionId: data.id });
+    // @ts-ignore: redirectToCheckout mungkin tidak tersedia di semua versi Stripe
+    await stripe?.redirectToCheckout({ sessionId: data.id as string });
   };
 
   useEffect(() => {

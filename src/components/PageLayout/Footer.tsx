@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "lib/nextjs-shim/link";
 
 const d = new Date();
 

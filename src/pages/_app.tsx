@@ -14,12 +14,12 @@ import { useRouter } from "next/router";
 
 const cartItems = Cookies.get("_cart");
 
-const parsedCartItems = cartItems && JSON.parse(cartItems);
-const slugs =
-  parsedCartItems &&
-  parsedCartItems.reduce((slugs: string[], item: CookieCart) => {
-    return [...slugs, item.slug];
-  }, []);
+const parsedCartItems: CookieCart[] | null = cartItems ? JSON.parse(cartItems) : null;
+const slugs: string[] = parsedCartItems 
+  ? parsedCartItems.reduce((slugs: string[], item: CookieCart) => {
+      return [...slugs, item.slug];
+    }, [])
+  : [];
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return products.map((product: CartProduct, i) => {
       return {
         ...product,
-        quantity: parsedCartItems[i].quantity ? parsedCartItems[i].quantity : 1
+        quantity: parsedCartItems && parsedCartItems[i] && parsedCartItems[i].quantity ? parsedCartItems[i].quantity : 1
       };
     });
   };
@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         // }
 
         // Temporary: Menggunakan data dummy
-        const cartProducts = [];
+        const cartProducts: CartProduct[] = [];
 
         dispatch({
           type: Types.bulkAdd,

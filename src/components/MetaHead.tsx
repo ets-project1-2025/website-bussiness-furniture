@@ -1,5 +1,5 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
+import Head from "lib/nextjs-shim/head";
+import { useRouter } from "lib/nextjs-shim/router";
 
 interface MetaHeadProps {
   title?: string;

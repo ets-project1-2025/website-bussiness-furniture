@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import Link from "next/link";
+import Link from "lib/nextjs-shim/link";
 import { createClient } from "lib/supabase/client";
 import categoriesQuery from "lib/supabase/queries";
 import featuredProductsQuery from "lib/supabase/queries";
@@ -127,8 +127,8 @@ export const getStaticProps: GetStaticProps = async () => {
   // }
 
   // Temporary: Menggunakan data dummy
-  const categories = [];
-  const featuredProducts = [];
+  const categories: any[] = [];
+  const featuredProducts: any[] = [];
 
   return {
     props: { categories, products: featuredProducts },

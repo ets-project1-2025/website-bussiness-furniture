@@ -117,8 +117,8 @@ export const getStaticProps: GetStaticProps = async () => {
   // }
 
   // Temporary: Menggunakan data dummy
-  const products = [];
-  const categories = [];
+  const products: any[] = [];
+  const categories: any[] = [];
 
   return {
     props: { products, categories },

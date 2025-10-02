@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { CartProduct } from "../../lib/interfaces";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
-  apiVersion: "2022-08-01"
+  apiVersion: "2025-09-30.clover"
 });
 
 export const POST: APIRoute = async ({ request }) => {

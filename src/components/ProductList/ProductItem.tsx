@@ -1,6 +1,6 @@
 import styles from "styles/components/ProductList/ProductItem.module.scss";
-import Link from "next/link";
-import Image from "next/image";
+import Link from "lib/nextjs-shim/link";
+import Image from "lib/nextjs-shim/image";
 import { ProductSchema } from "lib/interfaces";
 import urlFor from "lib/supabase/urlFor";
 import classNames from "classnames";

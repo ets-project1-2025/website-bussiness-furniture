@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "lib/nextjs-shim/link";
 import Cart from "./Cart/Cart";
 import { useContext, useState } from "react";
 import CartItemsContext from "contexts/cartItemsContext";
