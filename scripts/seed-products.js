@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // scripts/seed-products.js
 
+import 'dotenv/config';
 import { insertDummyProducts } from '../src/lib/seed-products.js';
 
 const runSeed = async () => {

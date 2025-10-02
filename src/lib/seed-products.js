@@ -1,6 +1,7 @@
 // src/lib/seed-products.js
 import { createSupabaseClient } from './supabase.js';
 import { TABLES } from './supabase-config.js';
+import { v4 as uuidv4 } from 'uuid';
 
 // Data kategori furniture
 const categories = [
@@ -459,20 +460,23 @@ const products = [
 
 // Fungsi untuk menyisipkan data dummy ke Supabase
 export const insertDummyProducts = async () => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role untuk operasi seeding
+  const supabase = createSupabaseClient(true);
 
   try {
     // Hapus data lama jika ada (opsional)
-    await supabase.from(TABLES.CATEGORIES).delete().match({ id: '1' });
-    await supabase.from(TABLES.CATEGORIES).delete().match({ id: '2' });
-    await supabase.from(TABLES.CATEGORIES).delete().match({ id: '3' });
-    await supabase.from(TABLES.CATEGORIES).delete().match({ id: '4' });
-    await supabase.from(TABLES.CATEGORIES).delete().match({ id: '5' });
+    await supabase.from(TABLES.CATEGORIES).delete();
+    await supabase.from(TABLES.PRODUCT_IMAGES).delete();
+    await supabase.from(TABLES.PRODUCTS).delete();
 
-    // Tambahkan kategori baru
+    // Tambahkan kategori baru dengan UUID
+    const categoryIds = {};
     for (const category of categories) {
+      const categoryId = uuidv4();
+      categoryIds[category.id] = categoryId; // Simpan mapping ID lama ke UUID
+      
       const { error } = await supabase.from(TABLES.CATEGORIES).insert({
-        id: category.id,
+        id: categoryId,
         name: category.name,
         slug: category.slug
       });
@@ -482,15 +486,6 @@ export const insertDummyProducts = async () => {
       } else {
         console.log(`Successfully inserted category: ${category.name}`);
       }
-    }
-
-    // Hapus produk dan gambar produk lama
-    const { data: allProducts } = await supabase.from(TABLES.PRODUCTS).select('id');
-    if (allProducts) {
-      for (const product of allProducts) {
-        await supabase.from(TABLES.PRODUCT_IMAGES).delete().match({ product_id: product.id });
-      }
-      await supabase.from(TABLES.PRODUCTS).delete();
     }
 
     // Tambahkan produk baru
@@ -504,7 +499,7 @@ export const insertDummyProducts = async () => {
           price: product.price,
           dimensions: product.dimensions,
           materials: product.materials,
-          category_id: product.category_id
+          category_id: categoryIds[product.category_id]
         })
         .select();
 
