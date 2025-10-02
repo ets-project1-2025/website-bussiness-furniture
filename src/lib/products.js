@@ -1,11 +1,11 @@
 // src/lib/products.js
-import { createSupabaseClient } from './supabase';
+import { createSupabaseClient } from './supabase.js';
 import { 
   getAllDummyProducts, 
   getDummyProductById, 
   getDummyProductsByCategory, 
   getDummyCategories 
-} from './dummy-products';
+} from './dummy-products.js';
 
 // Fungsi untuk mendapatkan semua produk
 export const getAllProducts = async () => {

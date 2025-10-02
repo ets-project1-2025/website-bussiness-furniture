@@ -1,7 +1,14 @@
-// src/lib/seed-products.js
-import { createSupabaseClient } from './supabase.js';
-import { TABLES } from './supabase-config.js';
+// Test script untuk pembersihan dan seeding lengkap
+import { createClient } from '@supabase/supabase-js';
+import 'dotenv/config';
 import { v4 as uuidv4 } from 'uuid';
+
+// Ambil konfigurasi dari environment
+const supabaseUrl = process.env.PUBLIC_SUPABASE_URL;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Buat client Supabase dengan service role
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 // Data kategori furniture
 const categories = [
@@ -458,24 +465,27 @@ const products = [
   }
 ];
 
-// Fungsi untuk menyisipkan data dummy ke Supabase
-export const insertDummyProducts = async () => {
-  // Gunakan service role untuk operasi seeding
-  const supabase = createSupabaseClient(true);
-
+const runSeed = async () => {
+  console.log('Memulai proses seeding dengan pendekatan yang lebih menyeluruh...');
+  
   try {
-    // Hapus data lama terlebih dahulu
-    await supabase.from(TABLES.PRODUCT_IMAGES).delete();
-    await supabase.from(TABLES.PRODUCTS).delete();
-    await supabase.from(TABLES.CATEGORIES).delete();
+    // Langkah 1: Hapus semua data terkait dalam urutan yang benar
+    console.log('1. Menghapus data produk terlebih dahulu...');
+    await supabase.from('product_images').delete();
+    console.log('2. Menghapus data produk...');
+    await supabase.from('products').delete();
+    console.log('3. Menghapus kategori...');
+    await supabase.from('categories').delete();
+    console.log('4. Selesai menghapus semua data lama.');
 
-    // Tambahkan kategori baru dengan UUID
+    // Langkah 2: Tambahkan kategori baru dengan UUID
+    console.log('5. Menambahkan kategori baru...');
     const categoryIds = {};
     for (const category of categories) {
       const categoryId = uuidv4();
       categoryIds[category.id] = categoryId; // Simpan mapping ID lama ke UUID
       
-      const { error } = await supabase.from(TABLES.CATEGORIES).insert({
+      const { error } = await supabase.from('categories').insert({
         id: categoryId,
         name: category.name,
         slug: category.slug
@@ -484,15 +494,16 @@ export const insertDummyProducts = async () => {
       if (error) {
         console.error('Error inserting category:', error);
       } else {
-        console.log(`Successfully inserted category: ${category.name}`);
+        console.log(`   Successfully inserted category: ${category.name}`);
       }
     }
 
-    // Tambahkan produk baru
+    // Langkah 3: Tambahkan produk baru
+    console.log('6. Menambahkan produk dan gambar produk...');
     for (const product of products) {
       // Buat produk
       const { data, error } = await supabase
-        .from(TABLES.PRODUCTS)
+        .from('products')
         .insert({
           name: product.name,
           description: product.description,
@@ -507,13 +518,13 @@ export const insertDummyProducts = async () => {
         console.error('Error inserting product:', error);
       } else if (data && data.length > 0) {
         const productId = data[0].id;
-        console.log(`Successfully inserted product: ${product.name}`);
+        console.log(`   Successfully inserted product: ${product.name}`);
 
         // Tambahkan gambar-gambar produk
         for (let i = 0; i < product.image_urls.length; i++) {
           const imageUrl = product.image_urls[i];
           const { error: imageError } = await supabase
-            .from(TABLES.PRODUCT_IMAGES)
+            .from('product_images')
             .insert({
               product_id: productId,
               image_url: imageUrl,
@@ -523,14 +534,27 @@ export const insertDummyProducts = async () => {
           if (imageError) {
             console.error('Error inserting product image:', imageError);
           } else {
-            console.log(`Successfully inserted image for product: ${product.name}`);
+            console.log(`      Successfully inserted image for product: ${product.name}`);
           }
         }
       }
     }
 
-    console.log('All dummy products and categories have been inserted successfully!');
+    console.log('7. Selesai! Semua produk dan gambar telah berhasil disisipkan.');
+
+    // Langkah akhir: Cek jumlah data yang berhasil disisipkan
+    const { count: productCount } = await supabase.from('products').select('*', { count: 'exact', head: true });
+    const { count: imageCount } = await supabase.from('product_images').select('*', { count: 'exact', head: true });
+    const { count: categoryCount } = await supabase.from('categories').select('*', { count: 'exact', head: true });
+    
+    console.log(`\nRingkasan:`);
+    console.log(`- Jumlah kategori: ${categoryCount}`);
+    console.log(`- Jumlah produk: ${productCount}`);
+    console.log(`- Jumlah gambar produk: ${imageCount}`);
+    
   } catch (error) {
-    console.error('Error in insertDummyProducts:', error);
+    console.error('Error utama dalam proses seeding:', error);
   }
 };
+
+runSeed();
