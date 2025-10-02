@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ProductSchema } from "lib/interfaces/schema";
-import urlFor from "lib/sanity/urlFor";
+import urlFor from "lib/supabase/urlFor";
 
 interface ProductCardProps {
   product: ProductSchema;

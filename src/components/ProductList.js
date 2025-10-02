@@ -1,24 +1,30 @@
-// Contoh komponen React untuk menampilkan produk dari Sanity
+// Contoh komponen React untuk menampilkan produk dari Supabase
 import { useState, useEffect } from 'react';
-import { getAllProducts } from '../lib/sanity';
+// import { getAllProducts } from '../lib/supabase'; // Sudah dipindahkan ke index.ts
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getAllProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error loading products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // TODO: Implementasi untuk mengambil produk dari Supabase
+    // const fetchProducts = async () => {
+    //   try {
+    //     const supabase = createClient(); // Dapatkan client Supabase
+    //     const { data, error } = await supabase.from('products').select('*');
+    //     if (error) throw error;
+    //     setProducts(data);
+    //   } catch (error) {
+    //     console.error('Error loading products:', error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
 
-    fetchProducts();
+    // Temporary: Menggunakan data dummy
+    const dummyProducts = [];
+    setProducts(dummyProducts);
+    setLoading(false);
   }, []);
 
   if (loading) {

@@ -1,9 +1,9 @@
 import { GetStaticProps, GetStaticPaths } from "next";
-import client from "lib/sanity/client";
+import { createClient } from "lib/supabase/client";
 import { CategorySchema, ProductSchema } from "lib/interfaces";
-import categoryQuery from "lib/sanity/queries/category";
-import categoriesSlugsQuery from "lib/sanity/queries/categories_slugs";
-import categoryProductsQuery from "lib/sanity/queries/category_products";
+import categoryQuery from "lib/supabase/queries";
+import categoriesSlugsQuery from "lib/supabase/queries";
+import categoryProductsQuery from "lib/supabase/queries";
 import ProductList from "components/ProductList/ProductList";
 import MetaHead from "components/MetaHead";
 
@@ -40,16 +40,30 @@ const Category: React.FC<CategoryProps> = ({ products, category }) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const products = await client.fetch(categoryProductsQuery, {
-    slug: params?.slug
-  });
-  const category = await client.fetch(categoryQuery, {
-    slug: params?.slug
-  });
+  // TODO: Implementasi query ke Supabase
+  // const supabase = createClient();
+  // const { data: category, error: categoryError } = await supabase
+  //   .from('categories')
+  //   .select('*')
+  //   .eq('slug', params?.slug)
+  //   .single();
 
-  if (!products || !category) {
-    throw Error("Sorry, something went wrong.");
-  }
+  // if (categoryError || !category) {
+  //   throw Error("Sorry, something went wrong.");
+  // }
+
+  // const { data: products, error: productsError } = await supabase
+  //   .from('products')
+  //   .select('*')
+  //   .eq('category_id', category.id);  // Asumsi ada relasi category_id
+
+  // if (productsError || !products) {
+  //   throw Error("Sorry, something went wrong.");
+  // }
+
+  // Temporary: Menggunakan data dummy
+  const products = [];
+  const category = { id: '', title: '', description: '', slug: params?.slug as string };
 
   return {
     props: { products, category },
@@ -58,7 +72,19 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = await client.fetch(categoriesSlugsQuery);
+  // TODO: Implementasi query ke Supabase
+  // const supabase = createClient();
+  // const { data: slugs, error } = await supabase
+  //   .from('categories')
+  //   .select('slug')
+  //   .limit(100); // Batasi jumlah slug untuk performa
+
+  // if (error) {
+  //   throw error;
+  // }
+
+  // Temporary: Menggunakan data dummy
+  const slugs = [];
 
   const paths = slugs.map((item: { slug: string }) => ({
     params: { slug: item.slug }

@@ -5,5 +5,9 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), tailwind()]
+  integrations: [react(), tailwind()],
+  server: {
+    port: 4321,
+    host: true  // Mengizinkan akses dari alamat IP eksternal (penting untuk codespaces)
+  }
 });

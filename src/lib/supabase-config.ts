@@ -2,8 +2,8 @@
 // File konfigurasi untuk Supabase project
 
 export const SUPABASE_CONFIG = {
-  url: import.meta.env.PUBLIC_SUPABASE_URL!,
-  anonKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY!,
+  url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 };
 
 export const TABLES = {

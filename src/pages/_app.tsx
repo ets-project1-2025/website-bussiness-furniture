@@ -6,10 +6,10 @@ import CartItemsContext from "contexts/cartItemsContext";
 import CartVisibilityContext from "contexts/cartVisibilityContext";
 import { cartReducer } from "reducers/cart/reducer";
 import Types from "reducers/cart/types";
-import productsBySlugsQuery from "lib/sanity/queries/products_by_slugs";
+import productsBySlugsQuery from "lib/supabase/queries";
 import { CookieCart, CartProduct } from "lib/interfaces";
 import Cookies from "js-cookie";
-import client from "lib/sanity/client";
+import { createClient } from "lib/supabase/client";
 import { useRouter } from "next/router";
 
 const cartItems = Cookies.get("_cart");
@@ -42,13 +42,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const fetchCartProducts = async () => {
       if (parsedCartItems) {
-        const cartProducts = await client.fetch(productsBySlugsQuery, {
-          slugs
-        });
+        // TODO: Implementasi query ke Supabase
+        // const supabase = createClient();
+        // const { data: cartProducts, error } = await supabase
+        //   .from('products')
+        //   .select('*')
+        //   .in('slug', slugs);
 
-        if (!cartProducts) {
-          throw Error("Sorry, something went wrong.");
-        }
+        // if (error) {
+        //   throw Error("Sorry, something went wrong.");
+        // }
+
+        // Temporary: Menggunakan data dummy
+        const cartProducts = [];
 
         dispatch({
           type: Types.bulkAdd,

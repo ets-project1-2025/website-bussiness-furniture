@@ -4,7 +4,7 @@ import { CartProduct } from "lib/interfaces";
 import Image from "next/image";
 import CartItemsContext from "contexts/cartItemsContext";
 import Types from "reducers/cart/types";
-import urlFor from "lib/sanity/urlFor";
+import urlFor from "lib/supabase/urlFor";
 
 interface ItemProps {
   product: CartProduct;

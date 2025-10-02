@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CategorySchema } from "lib/interfaces";
 import styles from "styles/components/CategoryList/CategoryItem.module.scss";
-import urlFor from "lib/sanity/urlFor";
+import urlFor from "lib/supabase/urlFor";
 
 interface CategoryItemProps {
   category: CategorySchema;

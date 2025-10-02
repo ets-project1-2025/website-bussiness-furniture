@@ -9,11 +9,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.14.1",
     "@astrojs/react": "^4.1.2",
+    "@supabase/supabase-js": "^2.48.1",
+    "@types/stripe-v3": "^3.1.33",
+    "astro": "^5.14.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@supabase/supabase-js": "^2.48.1"
+    "stripe": "^19.0.0"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^5.1.4",

@@ -17,15 +17,9 @@ class MyDocument extends Document {
             href="https://fonts.gstatic.com"
             crossOrigin="true"
           />
-          <link
-            rel="preconnect"
-            href="https://cdn.sanity.io"
-            crossOrigin="true"
-          />
           
           {/* DNS prefetch for external resources */}
           <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-          <link rel="dns-prefetch" href="//cdn.sanity.io" />
           
           {/* Meta theme color for mobile browsers */}
           <meta name="theme-color" content="#ffffff" />

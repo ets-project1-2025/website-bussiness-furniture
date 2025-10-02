@@ -3,22 +3,32 @@
 
 import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest';
 import { login, logout, getCurrentUser } from '../auth';
-import { supabase } from '../supabase';
+import { createSupabaseClient } from '../supabase';
 
 // Mock Supabase
 vi.mock('../supabase', () => ({
-  supabase: {
+  createSupabaseClient: vi.fn(() => ({
     auth: {
       signInWithPassword: vi.fn(),
       signOut: vi.fn(),
       getUser: vi.fn()
     }
-  }
+  }))
 }));
 
 describe('Authentication Functions', () => {
+  let mockSupabase;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSupabase = {
+      auth: {
+        signInWithPassword: vi.fn(),
+        signOut: vi.fn(),
+        getUser: vi.fn()
+      }
+    };
+    createSupabaseClient.mockReturnValue(mockSupabase);
   });
 
   describe('login', () => {
@@ -26,11 +36,11 @@ describe('Authentication Functions', () => {
       const mockCredentials = { email: 'test@example.com', password: 'password123' };
       const mockResponse = { data: { user: { id: 'user123' } }, error: null };
 
-      supabase.auth.signInWithPassword.mockResolvedValue(mockResponse);
+      mockSupabase.auth.signInWithPassword.mockResolvedValue(mockResponse);
 
       await login(mockCredentials.email, mockCredentials.password);
 
-      expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
+      expect(mockSupabase.auth.signInWithPassword).toHaveBeenCalledWith({
         email: mockCredentials.email,
         password: mockCredentials.password
       });
@@ -40,7 +50,7 @@ describe('Authentication Functions', () => {
       const mockCredentials = { email: 'test@example.com', password: 'wrongpassword' };
       const mockError = new Error('Invalid credentials');
 
-      supabase.auth.signInWithPassword.mockResolvedValue({ error: mockError });
+      mockSupabase.auth.signInWithPassword.mockResolvedValue({ error: mockError });
 
       await expect(login(mockCredentials.email, mockCredentials.password))
         .rejects
@@ -52,12 +62,12 @@ describe('Authentication Functions', () => {
     it('should call Supabase signOut', async () => {
       await logout();
 
-      expect(supabase.auth.signOut).toHaveBeenCalled();
+      expect(mockSupabase.auth.signOut).toHaveBeenCalled();
     });
 
     it('should handle logout error', async () => {
       const mockError = new Error('Logout failed');
-      supabase.auth.signOut.mockRejectedValue(mockError);
+      mockSupabase.auth.signOut.mockRejectedValue(mockError);
 
       await expect(logout())
         .rejects
@@ -68,7 +78,7 @@ describe('Authentication Functions', () => {
   describe('getCurrentUser', () => {
     it('should return user when authenticated', async () => {
       const mockUser = { id: 'user123', email: 'test@example.com' };
-      supabase.auth.getUser.mockResolvedValue({ data: { user: mockUser }, error: null });
+      mockSupabase.auth.getUser.mockResolvedValue({ data: { user: mockUser }, error: null });
 
       const user = await getCurrentUser();
 
@@ -76,7 +86,7 @@ describe('Authentication Functions', () => {
     });
 
     it('should return null when not authenticated', async () => {
-      supabase.auth.getUser.mockResolvedValue({ data: { user: null }, error: null });
+      mockSupabase.auth.getUser.mockResolvedValue({ data: { user: null }, error: null });
 
       const user = await getCurrentUser();
 
@@ -85,7 +95,7 @@ describe('Authentication Functions', () => {
 
     it('should throw error when getting user fails', async () => {
       const mockError = new Error('Failed to get user');
-      supabase.auth.getUser.mockResolvedValue({ error: mockError });
+      mockSupabase.auth.getUser.mockResolvedValue({ error: mockError });
 
       await expect(getCurrentUser())
         .rejects

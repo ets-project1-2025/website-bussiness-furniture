@@ -6,10 +6,10 @@ import { ProductSchema } from "lib/interfaces/schema";
 import CartItemsContext from "contexts/cartItemsContext";
 import Types from "reducers/cart/types";
 import { PortableText, toPlainText } from "@portabletext/react";
-import productsSlugsQuery from "lib/sanity/queries/products_slugs";
-import productQuery from "lib/sanity/queries/product";
-import urlFor from "lib/sanity/urlFor";
-import client from "lib/sanity/client";
+import productsSlugsQuery from "lib/supabase/queries";
+import productQuery from "lib/supabase/queries";
+import urlFor from "lib/supabase/urlFor";
+import { createClient } from "lib/supabase/client";
 import classNames from "classnames";
 import MetaHead from "components/MetaHead";
 import CartVisibilityContext from "contexts/cartVisibilityContext";
@@ -252,19 +252,28 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const product = await client.fetch(productQuery, {
-    slug: params?.slug
-  });
+  // TODO: Implementasi query ke Supabase
+  // const supabase = createClient();
+  // const { data: product, error } = await supabase
+  //   .from('products')
+  //   .select(`
+  //     *,
+  //     category:categories(*)
+  //   `)
+  //   .eq('slug', params?.slug)
+  //   .single();
 
-  // Return a fallback page if product is not found
-  if (!product) {
-    return {
-      props: { 
-        product: null 
-      },
-      revalidate: 100
-    };
-  }
+  // if (error || !product) {
+  //   return {
+  //     props: { 
+  //       product: null 
+  //     },
+  //     revalidate: 100
+  //   };
+  // }
+
+  // Temporary: Menggunakan data dummy
+  const product = null;
 
   return {
     props: { product },
@@ -273,7 +282,19 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = await client.fetch(productsSlugsQuery);
+  // TODO: Implementasi query ke Supabase
+  // const supabase = createClient();
+  // const { data: slugs, error } = await supabase
+  //   .from('products')
+  //   .select('slug')
+  //   .limit(100); // Batasi jumlah slug untuk performa
+
+  // if (error) {
+  //   throw error;
+  // }
+
+  // Temporary: Menggunakan data dummy
+  const slugs = [];
 
   const paths = slugs.map((item: { slug: string }) => ({
     params: { slug: item.slug }

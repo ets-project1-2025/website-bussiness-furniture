@@ -1,10 +1,24 @@
 // src/lib/cart.js
-import { supabase } from './supabase';
+import { createSupabaseClient } from './supabase';
 
 // Fungsi untuk mendapatkan item keranjang berdasarkan user ID
 export const getCartItems = async (userId) => {
   if (!userId) {
     // Jika tidak ada userId, coba ambil dari localStorage untuk pengguna anonim
+    if (typeof window !== 'undefined') {
+      const cart = localStorage.getItem('cart');
+      return cart ? JSON.parse(cart) : [];
+    }
+    return [];
+  }
+
+  // Buat client Supabase
+  const supabase = createSupabaseClient();
+  
+  // Periksa apakah client Supabase tersedia
+  if (!supabase) {
+    console.warn('Supabase client not available. Using fallback from localStorage.');
+    // Jika client tidak tersedia, kembalikan dari localStorage sebagai fallback
     if (typeof window !== 'undefined') {
       const cart = localStorage.getItem('cart');
       return cart ? JSON.parse(cart) : [];
@@ -43,6 +57,29 @@ export const getCartItems = async (userId) => {
 export const addToCart = async (userId, product, quantity = 1) => {
   if (!userId) {
     // Jika tidak ada userId, gunakan localStorage untuk pengguna anonim
+    if (typeof window !== 'undefined') {
+      const cart = await getCartItems(userId);
+      const existingItem = cart.find(item => item.id === product.id);
+      
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        cart.push({ ...product, quantity });
+      }
+      
+      localStorage.setItem('cart', JSON.stringify(cart));
+      return cart;
+    }
+    return [];
+  }
+
+  // Buat client Supabase
+  const supabase = createSupabaseClient();
+  
+  // Periksa apakah client Supabase tersedia
+  if (!supabase) {
+    console.warn('Supabase client not available. Adding to local storage.');
+    // Jika client tidak tersedia, tambahkan ke localStorage sebagai fallback
     if (typeof window !== 'undefined') {
       const cart = await getCartItems(userId);
       const existingItem = cart.find(item => item.id === product.id);
@@ -101,6 +138,22 @@ export const removeFromCart = async (userId, productId) => {
     return [];
   }
 
+  // Buat client Supabase
+  const supabase = createSupabaseClient();
+  
+  // Periksa apakah client Supabase tersedia
+  if (!supabase) {
+    console.warn('Supabase client not available. Removing from local storage.');
+    // Jika client tidak tersedia, hapus dari localStorage sebagai fallback
+    if (typeof window !== 'undefined') {
+      const cart = await getCartItems(userId);
+      const updatedCart = cart.filter(item => item.id !== productId);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      return updatedCart;
+    }
+    return [];
+  }
+
   // Hapus dari database untuk pengguna terotentikasi
   const { error } = await supabase
     .from('cart_items')
@@ -120,6 +173,31 @@ export const removeFromCart = async (userId, productId) => {
 export const updateCartItemQuantity = async (userId, productId, quantity) => {
   if (!userId) {
     // Jika tidak ada userId, perbarui di localStorage untuk pengguna anonim
+    if (typeof window !== 'undefined') {
+      const cart = await getCartItems(userId);
+      const item = cart.find(item => item.id === productId);
+      
+      if (item) {
+        if (quantity > 0) {
+          item.quantity = quantity;
+        } else {
+          return removeFromCart(userId, productId);
+        }
+      }
+      
+      localStorage.setItem('cart', JSON.stringify(cart));
+      return cart;
+    }
+    return [];
+  }
+
+  // Buat client Supabase
+  const supabase = createSupabaseClient();
+  
+  // Periksa apakah client Supabase tersedia
+  if (!supabase) {
+    console.warn('Supabase client not available. Updating local storage.');
+    // Jika client tidak tersedia, perbarui di localStorage sebagai fallback
     if (typeof window !== 'undefined') {
       const cart = await getCartItems(userId);
       const item = cart.find(item => item.id === productId);
@@ -171,6 +249,20 @@ export const updateCartItemQuantity = async (userId, productId, quantity) => {
 export const clearCart = async (userId) => {
   if (!userId) {
     // Jika tidak ada userId, kosongkan localStorage untuk pengguna anonim
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('cart');
+      return [];
+    }
+    return [];
+  }
+
+  // Buat client Supabase
+  const supabase = createSupabaseClient();
+  
+  // Periksa apakah client Supabase tersedia
+  if (!supabase) {
+    console.warn('Supabase client not available. Clearing local storage.');
+    // Jika client tidak tersedia, kosongkan localStorage sebagai fallback
     if (typeof window !== 'undefined') {
       localStorage.removeItem('cart');
       return [];

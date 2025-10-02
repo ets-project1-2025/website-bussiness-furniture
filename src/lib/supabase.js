@@ -1,15 +1,19 @@
 // src/lib/supabase.js
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+// Fungsi untuk membuat client Supabase
+export const createSupabaseClient = () => {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl) {
-  throw new Error('Missing Supabase URL in environment variables');
-}
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn('Missing Supabase environment variables. Client will not be initialized properly.');
+    // Mengembalikan client kosong atau null jika variabel lingkungan tidak tersedia
+    return null;
+  }
 
-if (!supabaseAnonKey) {
-  throw new Error('Missing Supabase Anon Key in environment variables');
-}
+  return createClient(supabaseUrl, supabaseAnonKey);
+};
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Membuat instance client Supabase
+export const supabase = createSupabaseClient();

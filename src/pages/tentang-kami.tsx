@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import Link from "next/link";
-import client from "lib/sanity/client";
+import { createClient } from "lib/supabase/client";
 import MetaHead from "components/MetaHead";
 
 interface AboutProps {

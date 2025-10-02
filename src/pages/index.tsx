@@ -1,8 +1,8 @@
 import { GetStaticProps } from "next";
 import Link from "next/link";
-import client from "lib/sanity/client";
-import categoriesQuery from "lib/sanity/queries/categories";
-import featuredProductsQuery from "lib/sanity/queries/featured_products";
+import { createClient } from "lib/supabase/client";
+import categoriesQuery from "lib/supabase/queries";
+import featuredProductsQuery from "lib/supabase/queries";
 import { CategorySchema, ProductSchema } from "lib/interfaces/schema";
 import MetaHead from "components/MetaHead";
 import CategoryList from "components/CategoryList/CategoryList";
@@ -117,12 +117,18 @@ const Home: React.FC<HomeProps> = ({ categories, products }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const categories = await client.fetch(categoriesQuery);
-  const featuredProducts = await client.fetch(featuredProductsQuery);
+  // TODO: Implementasi query ke Supabase
+  // const supabase = createClient();
+  // const { data: categories, error: categoriesError } = await supabase.from('categories').select('*');
+  // const { data: featuredProducts, error: productsError } = await supabase.from('products').select('*').limit(8);
 
-  if (!categories || !featuredProducts) {
-    throw Error("Sorry, something went wrong.");
-  }
+  // if (categoriesError || productsError) {
+  //   throw Error("Sorry, something went wrong.");
+  // }
+
+  // Temporary: Menggunakan data dummy
+  const categories = [];
+  const featuredProducts = [];
 
   return {
     props: { categories, products: featuredProducts },

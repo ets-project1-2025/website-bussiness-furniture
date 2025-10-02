@@ -1,8 +1,15 @@
 // src/lib/products.js
-import { supabase } from './supabase';
+import { createSupabaseClient } from './supabase';
 
 // Fungsi untuk mendapatkan semua produk
 export const getAllProducts = async () => {
+  const supabase = createSupabaseClient();
+  
+  if (!supabase) {
+    console.warn('Supabase client not available.');
+    return [];
+  }
+  
   const { data, error } = await supabase
     .from('products')
     .select(`
@@ -12,7 +19,8 @@ export const getAllProducts = async () => {
     .order('created_at', { ascending: false });
 
   if (error) {
-    throw error;
+    console.error('Error fetching products:', error);
+    return [];
   }
 
   return data;
@@ -20,6 +28,13 @@ export const getAllProducts = async () => {
 
 // Fungsi untuk mendapatkan produk berdasarkan ID
 export const getProductById = async (id) => {
+  const supabase = createSupabaseClient();
+  
+  if (!supabase) {
+    console.warn('Supabase client not available.');
+    return null;
+  }
+  
   const { data, error } = await supabase
     .from('products')
     .select(`
@@ -31,7 +46,8 @@ export const getProductById = async (id) => {
     .single();
 
   if (error) {
-    throw error;
+    console.error('Error fetching product by ID:', error);
+    return null;
   }
 
   return data;
@@ -39,6 +55,13 @@ export const getProductById = async (id) => {
 
 // Fungsi untuk mendapatkan produk berdasarkan kategori
 export const getProductsByCategory = async (categoryId) => {
+  const supabase = createSupabaseClient();
+  
+  if (!supabase) {
+    console.warn('Supabase client not available.');
+    return [];
+  }
+  
   const { data, error } = await supabase
     .from('products')
     .select(`
@@ -48,7 +71,8 @@ export const getProductsByCategory = async (categoryId) => {
     .eq('category_id', categoryId);
 
   if (error) {
-    throw error;
+    console.error('Error fetching products by category:', error);
+    return [];
   }
 
   return data;
@@ -56,13 +80,21 @@ export const getProductsByCategory = async (categoryId) => {
 
 // Fungsi untuk mendapatkan kategori produk
 export const getCategories = async () => {
+  const supabase = createSupabaseClient();
+  
+  if (!supabase) {
+    console.warn('Supabase client not available.');
+    return [];
+  }
+  
   const { data, error } = await supabase
     .from('categories')
     .select('*')
     .order('name', { ascending: true });
 
   if (error) {
-    throw error;
+    console.error('Error fetching categories:', error);
+    return [];
   }
 
   return data;
@@ -70,13 +102,21 @@ export const getCategories = async () => {
 
 // Fungsi untuk mendapatkan semua lookbook galleries
 export const getAllLookbookGalleries = async () => {
+  const supabase = createSupabaseClient();
+  
+  if (!supabase) {
+    console.warn('Supabase client not available.');
+    return [];
+  }
+  
   const { data, error } = await supabase
     .from('lookbook_galleries')
     .select('*')
     .order('created_at', { ascending: false });
 
   if (error) {
-    throw error;
+    console.error('Error fetching lookbook galleries:', error);
+    return [];
   }
 
   return data;
@@ -84,6 +124,13 @@ export const getAllLookbookGalleries = async () => {
 
 // Fungsi untuk mendapatkan detail lookbook gallery beserta hotspot-nya
 export const getLookbookGalleryById = async (id) => {
+  const supabase = createSupabaseClient();
+  
+  if (!supabase) {
+    console.warn('Supabase client not available.');
+    return null;
+  }
+  
   const { data, error } = await supabase
     .from('lookbook_galleries')
     .select(`
@@ -94,7 +141,8 @@ export const getLookbookGalleryById = async (id) => {
     .single();
 
   if (error) {
-    throw error;
+    console.error('Error fetching lookbook gallery:', error);
+    return null;
   }
 
   return data;
