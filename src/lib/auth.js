@@ -1,5 +1,6 @@
 // src/lib/auth.js
 import { createSupabaseClient } from './supabase';
+import { createSupabaseServerClient } from './supabase-server'; // Impor fungsi server client
 
 // Fungsi untuk login
 export const login = async (email, password) => {
@@ -61,6 +62,9 @@ export const register = async (email, password, fullName) => {
 
 // Fungsi untuk logout
 export const logout = async () => {
+  // Untuk logout, kita tetap bisa menggunakan client anon di sisi klien,
+  // atau server client jika konteksnya SSR.
+  // Dalam konteks SSR, kita mungkin ingin menerima konteks Astro di sini juga.
   const supabase = createSupabaseClient();
   
   if (!supabase) {
@@ -76,12 +80,25 @@ export const logout = async () => {
 };
 
 // Fungsi untuk mendapatkan user saat ini
-export const getCurrentUser = async () => {
-  const supabase = createSupabaseClient();
-  
-  if (!supabase) {
-    console.warn('Supabase client not available.');
-    return null;
+// Menerima konteks Astro untuk SSR
+export const getCurrentUser = async (Astro = null) => {
+  let supabase;
+
+  if (Astro) {
+    // Jika konteks Astro tersedia (SSR), gunakan server client
+    const { client } = createSupabaseServerClient(Astro);
+    supabase = client;
+    if (!supabase) {
+      console.warn('Supabase server client not available.');
+      return null;
+    }
+  } else {
+    // Jika tidak (klien), gunakan client anon
+    supabase = createSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available.');
+      return null;
+    }
   }
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -89,20 +106,22 @@ export const getCurrentUser = async () => {
 };
 
 // Fungsi untuk memeriksa apakah user sudah login
-export const isAuthenticated = async () => {
-  const user = await getCurrentUser();
+// Menerima konteks Astro untuk SSR
+export const isAuthenticated = async (Astro = null) => {
+  const user = await getCurrentUser(Astro);
   return !!user;
 };
 
 // Fungsi untuk mendapatkan profile pelanggan
-export const getCustomerProfile = async () => {
-  const supabase = createSupabaseClient();
+// Menerima konteks Astro untuk SSR
+export const getCustomerProfile = async (Astro = null) => {
+  const supabase = createSupabaseClient(); // Kita tetap gunakan client anon untuk query data
   
   if (!supabase) {
     throw new Error('Supabase client not available. Profile cannot be retrieved.');
   }
 
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(Astro); // Gunakan SSR-aware getCurrentUser
   
   if (!user) {
     throw new Error('User not authenticated');
@@ -122,15 +141,50 @@ export const getCustomerProfile = async () => {
   return data;
 };
 
+// Fungsi untuk memeriksa apakah user adalah admin
+// Menerima konteks Astro untuk SSR
+// Penting: service role key hanya digunakan untuk mengakses tabel profiles, bukan untuk auth.getUser
+export const isAdmin = async (Astro = null) => {
+  // Gunakan service role untuk mengakses tabel profiles
+  const supabase = createSupabaseClient(true);
+  
+  if (!supabase) {
+    console.warn('Supabase client with service role not available.');
+    return false;
+  }
+
+  const user = await getCurrentUser(Astro); // Gunakan SSR-aware getCurrentUser
+  
+  if (!user) {
+    return false;
+  }
+
+  // Cek apakah user memiliki role admin di tabel profiles
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', user.id)
+    .single();
+
+  if (error) {
+    console.error('Error checking admin status:', error);
+    // Jika tabel profiles belum memiliki kolom is_admin, default ke false
+    return false;
+  }
+
+  return profile?.is_admin === true;
+};
+
 // Fungsi untuk memperbarui profile pelanggan
-export const updateCustomerProfile = async (profileData) => {
-  const supabase = createSupabaseClient();
+// Menerima konteks Astro untuk SSR
+export const updateCustomerProfile = async (profileData, Astro = null) => {
+  const supabase = createSupabaseClient(); // Kita tetap gunakan client anon untuk mutation data
   
   if (!supabase) {
     throw new Error('Supabase client not available. Profile cannot be updated.');
   }
 
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(Astro); // Gunakan SSR-aware getCurrentUser
   
   if (!user) {
     throw new Error('User not authenticated');

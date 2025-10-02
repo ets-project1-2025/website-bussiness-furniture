@@ -1,24 +1,24 @@
 ---
 // src/pages/admin/orders.astro
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { getCurrentUser } from '../../lib/auth';
+import { getCurrentUser, isAdmin } from '../../lib/auth'; // Tambahkan isAdmin
 import { getAllOrders } from '../../lib/admin-api';
 
-// Periksa otentikasi admin
-const { data: { user } } = await supabase.auth.getUser();
-if (!user) {
-  return Response.redirect(new URL('/admin/login', request.url));
-}
+// Periksa otentikasi admin menggunakan fungsi baru
+let currentUser = null;
 
-// Cek apakah user memiliki role admin
-const { data: profileData } = await supabase
-  .from('profiles')
-  .select('id')
-  .eq('id', user.id)
-  .single();
+try {
+  currentUser = await getCurrentUser(Astro); // Teruskan konteks Astro
+  const userIsAdmin = await isAdmin(Astro); // Teruskan konteks Astro
 
-if (!profileData) {
-  return Response.redirect(new URL('/akun/login', request.url));
+  if (!currentUser || !userIsAdmin) {
+    // Gunakan Astro.redirect, bukan Response.redirect
+    return Astro.redirect('/admin/login');
+  }
+} catch (error) {
+  console.error('Error checking admin status:', error);
+  // Jika cek auth gagal, redirect ke login
+  return Astro.redirect('/admin/login');
 }
 
 // Ambil daftar pesanan

@@ -1,20 +1,22 @@
 ---
 // src/pages/admin/categories.astro
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { getCurrentUser } from '../../lib/auth';
+import { getCurrentUser, isAdmin } from '../../lib/auth';
 import { getAllCategories } from '../../lib/admin-api';
 
-// Cek otentikasi sebelum memuat halaman
+// Cek otentikasi dan status admin sebelum memuat halaman
 let user = null;
 
 try {
-  user = await getCurrentUser();
-  if (!user) {
-    // Redirect ke halaman login jika tidak otentikasi
+  user = await getCurrentUser(Astro); // Teruskan konteks Astro
+  const userIsAdmin = await isAdmin(Astro); // Impor dan gunakan isAdmin
+
+  if (!user || !userIsAdmin) {
+    // Redirect ke halaman login jika tidak otentikasi atau bukan admin
     return Astro.redirect('/admin/login');
   }
 } catch (error) {
-  console.error('Error checking authentication:', error);
+  console.error('Error checking authentication or admin status:', error);
   return Astro.redirect('/admin/login');
 }
 

@@ -6,7 +6,7 @@ import { getCurrentUser } from '../lib/auth';
 let user = null;
 
 try {
-  user = await getCurrentUser();
+  user = await getCurrentUser(Astro); // Teruskan konteks Astro
   if (!user) {
     return Astro.redirect('/akun/login');
   }

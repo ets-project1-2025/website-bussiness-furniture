@@ -3,7 +3,8 @@ import { createSupabaseClient } from './supabase';
 
 // Fungsi CRUD untuk produk
 export const createProduct = async (productData) => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     throw new Error('Supabase client not available. Operation cannot proceed.');
@@ -24,7 +25,8 @@ export const createProduct = async (productData) => {
 };
 
 export const updateProduct = async (id, productData) => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     throw new Error('Supabase client not available. Operation cannot proceed.');
@@ -46,7 +48,8 @@ export const updateProduct = async (id, productData) => {
 };
 
 export const deleteProduct = async (id) => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     throw new Error('Supabase client not available. Operation cannot proceed.');
@@ -66,7 +69,8 @@ export const deleteProduct = async (id) => {
 };
 
 export const getAllProducts = async () => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     console.warn('Supabase client not available.');
@@ -92,7 +96,8 @@ export const getAllProducts = async () => {
 
 // Fungsi CRUD untuk kategori
 export const createCategory = async (categoryData) => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     throw new Error('Supabase client not available. Operation cannot proceed.');
@@ -113,7 +118,8 @@ export const createCategory = async (categoryData) => {
 };
 
 export const updateCategory = async (id, categoryData) => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     throw new Error('Supabase client not available. Operation cannot proceed.');
@@ -135,7 +141,8 @@ export const updateCategory = async (id, categoryData) => {
 };
 
 export const deleteCategory = async (id) => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     throw new Error('Supabase client not available. Operation cannot proceed.');
@@ -155,7 +162,8 @@ export const deleteCategory = async (id) => {
 };
 
 export const getAllCategories = async () => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     console.warn('Supabase client not available.');
@@ -177,7 +185,8 @@ export const getAllCategories = async () => {
 
 // Fungsi untuk mengelola gambar produk
 export const addProductImage = async (imageData) => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     throw new Error('Supabase client not available. Operation cannot proceed.');
@@ -198,7 +207,8 @@ export const addProductImage = async (imageData) => {
 };
 
 export const removeProductImage = async (imageId) => {
-  const supabase = createSupabaseClient();
+  // Gunakan service role key untuk operasi admin
+  const supabase = createSupabaseClient(true);
   
   if (!supabase) {
     throw new Error('Supabase client not available. Operation cannot proceed.');

@@ -1,24 +1,24 @@
 ---
 // src/pages/admin/users.astro
-import Layout from '../../layouts/Layout.astro';
-import { getCurrentUser } from '../../lib/auth';
+import AdminLayout from '../../layouts/AdminLayout.astro'; // Ganti Layout menjadi AdminLayout
+import { getCurrentUser, isAdmin } from '../../lib/auth';
 import { getSupabase } from '../../lib/supabase';
 
-// Periksa otentikasi admin
-const { data: { user } } = await supabase.auth.getUser();
-if (!user) {
-  return Response.redirect(new URL('/admin/login', request.url));
-}
+// Periksa otentikasi admin menggunakan fungsi baru
+let currentUser = null;
 
-// Cek apakah user memiliki role admin
-const { data: profileData } = await supabase
-  .from('profiles')
-  .select('id')
-  .eq('id', user.id)
-  .single();
+try {
+  currentUser = await getCurrentUser(Astro); // Teruskan konteks Astro
+  const userIsAdmin = await isAdmin(Astro); // Teruskan konteks Astro
 
-if (!profileData) {
-  return Response.redirect(new URL('/akun/login', request.url));
+  if (!currentUser || !userIsAdmin) {
+    // Gunakan Astro.redirect, bukan Response.redirect
+    return Astro.redirect('/admin/login');
+  }
+} catch (error) {
+  console.error('Error checking admin status:', error);
+  // Jika cek auth gagal, redirect ke login
+  return Astro.redirect('/admin/login');
 }
 
 // Ambil daftar pengguna
@@ -46,7 +46,7 @@ if (error) {
 }
 ---
 
-<Layout>
+<AdminLayout title="Manajemen Pengguna">
   <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-3xl font-bold text-gray-900">Manajemen Pengguna</h1>
@@ -146,4 +146,4 @@ if (error) {
       alert(`Detail pengguna akan ditampilkan di sini (fitur akan diimplementasikan nanti).\nID: ${userId}`);
     }
   </script>
-</Layout>
+</AdminLayout>

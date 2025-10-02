@@ -2,18 +2,26 @@
 // src/pages/akun/profil.astro
 import Layout from '../../layouts/Layout.astro';
 import { getCurrentUser } from '../../lib/auth';
+import { createSupabaseClient } from '../../lib/supabase'; // Impor createSupabaseClient
 
 let user = null;
 let profile = null;
 
 try {
-  user = await getCurrentUser();
+  user = await getCurrentUser(Astro); // Teruskan konteks Astro
   if (!user) {
     return Astro.redirect('/akun/login');
   }
   
   // Ambil data profil pengguna
-  const { data: profileData, error } = await supabase
+  // Kita tetap bisa menggunakan client anon untuk query data profil,
+  // karena session sudah diverifikasi oleh getCurrentUser(Astro)
+  const supabaseAnon = createSupabaseClient();
+  if (!supabaseAnon) {
+     throw new Error('Supabase client not available. Profile cannot be retrieved.');
+  }
+
+  const { data: profileData, error } = await supabaseAnon
     .from('profiles')
     .select('*')
     .eq('id', user.id)
