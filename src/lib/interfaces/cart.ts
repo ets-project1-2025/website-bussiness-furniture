@@ -1,7 +1,7 @@
-import { ProductSchema, Image } from "./schema";
+import { ProductSchema } from "./schema";
 
 export interface CartProduct extends ProductSchema {
-  quantity?: number;
+  quantity: number;
 }
 
 export interface CookieCart {

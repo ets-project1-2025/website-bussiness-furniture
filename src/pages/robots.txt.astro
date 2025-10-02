@@ -1,0 +1,13 @@
+---
+// src/pages/robots.txt.astro
+import { SITE_URL } from '../config';
+
+const robotsTxt = `
+User-agent: *
+Allow: /
+
+Sitemap: ${SITE_URL}/sitemap.xml
+`.trim();
+---
+
+{robotsTxt}

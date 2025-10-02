@@ -24,24 +24,39 @@ export const POST: APIRoute = async ({ request }) => {
         }
       ],
       line_items: body.items.map((item: CartProduct) => {
-        // Untuk sementara, kita gunakan URL gambar dari produk
-        // Kita perlu mengganti ini dengan URL yang valid dari Supabase
-        const imgUrl = item.image || "https://placehold.co/400x400"; // Placeholder sementara
+        // Membangun URL gambar dari item produk
+        // Jika item memiliki gambar, gunakan gambar itu, jika tidak gunakan placeholder
+        let imgUrl = "https://placehold.co/400x400"; // Placeholder sementara
+        
+        // Dalam struktur baru, kita menggunakan image_url dan image_urls
+        if (item.image_url) {
+          imgUrl = item.image_url;
+        } else if (item.images && Array.isArray(item.images) && item.images.length > 0) {
+          // Jika ada array gambar, ambil yang pertama
+          const firstImage = item.images[0];
+          imgUrl = typeof firstImage === 'string' ? firstImage : "https://placehold.co/400x400";
+        } else if (item.image_urls && Array.isArray(item.image_urls) && item.image_urls.length > 0) {
+          // Jika menggunakan struktur image_urls
+          imgUrl = item.image_urls[0];
+        } else {
+          // Gunakan placeholder jika tidak ada gambar
+          imgUrl = "https://placehold.co/400x400";
+        }
 
         return {
           price_data: {
-            currency: "USD",
+            currency: item.currency || "USD",
             product_data: {
               name: item.name,
               images: [imgUrl]
             },
-            unit_amount: (item.on_sale ? item.sale_price : item.price) * 100
+            unit_amount: (item.on_sale && item.sale_price ? item.sale_price : item.price) * 100
           },
           adjustable_quantity: {
             enabled: true,
             minimum: 1
           },
-          quantity: item.quantity || 1
+          quantity: item.quantity
         };
       }),
       mode: "payment",
